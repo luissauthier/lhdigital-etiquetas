@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>lhdigital — Simulador de Etiquetas</title>
+<meta name="description" content="Simule etiquetas P (40×10 mm) e G (75×40 mm). Escolha personagem, cor e envie o pedido no WhatsApp.">
+<style>
+  :root{
+    --bg:#0f1220; --card:#161a2b; --ink:#e8eaf6; --muted:#aab1d1;
+    --accent:#7aa5ff; --radius:14px; --gap:16px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),#0b0e1a);color:var(--ink)}
+  header,main,footer{max-width:1100px;margin:0 auto;padding:24px clamp(16px,3vw,24px)}
+  header h1{margin:0;font-size:22px;display:flex;align-items:center;gap:10px}
+  header h1 span.logo{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:9px;background:linear-gradient(160deg,#5dd4b5,var(--accent));color:#0a0d18;font-weight:800}
+  header p{margin:8px 0 0;color:var(--muted);font-size:14px}
+  .grid{display:grid;gap:var(--gap)}
+  .cols{grid-template-columns:1fr 1fr}
+  @media (max-width:960px){.cols{grid-template-columns:1fr}}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);box-shadow:0 12px 30px rgba(0,0,0,.25);padding:18px}
+  .card h2{margin:4px 0 14px;font-size:18px}
+  label{font-size:12px;color:var(--muted);display:block;margin:0 0 6px}
+  input[type="text"], select{width:100%;padding:10px 12px;background:#0c0f1c;color:var(--ink);border:1px solid rgba(255,255,255,.08);border-radius:10px;outline:none}
+  input[type="color"]{width:100%;height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:#0c0f1c}
+  .row{display:grid;gap:12px;grid-template-columns:repeat(12,1fr)}
+  .row>*{min-width:0}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:linear-gradient(160deg,var(--accent),#5dd4b5);color:#0a0d18;font-weight:700;text-decoration:none;cursor:pointer}
+  .btn.secondary{background:transparent;color:var(--ink)}
+  .btns{display:flex;flex-wrap:wrap;gap:12px}
+  .tag{font-size:12px;color:var(--muted);margin:6px 0 12px}
+  canvas{width:100%;height:auto;display:block;background:#fff; padding: 12px; border-radius:0;border:1px solid rgba(255,255,255,.08)}
+  .preview-grid{display:grid;gap:var(--gap);grid-template-columns:1fr 1fr}
+  @media (max-width:720px){.preview-grid{grid-template-columns:1fr}}
+  /* Galeria */
+  .gallery{display:grid;gap:12px;grid-template-columns:repeat(6,1fr)}
+  @media (max-width:1100px){.gallery{grid-template-columns:repeat(5,1fr)}}
+  @media (max-width:840px){.gallery{grid-template-columns:repeat(4,1fr)}}
+  @media (max-width:640px){.gallery{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:460px){.gallery{grid-template-columns:repeat(2,1fr)}}
+  .card-img{background:#0c0f1c;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:8px;cursor:pointer;display:grid;gap:6px;place-items:center}
+  .card-img img{width:100%;height:92px;object-fit:contain}
+  .card-img span{font-size:12px;color:var(--muted);text-align:center}
+  .card-img.active{outline:2px solid #5dd4b5}
+  footer{color:var(--muted);font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <h1><span class="logo">lh</span> lhdigital — Simulador de Etiquetas</h1>
+  <p>Pré-visualize as etiquetas <strong>P (40×10 mm)</strong> e <strong>G (75×40 mm)</strong>, escolha personagem e cor única (texto+borda) e envie o pedido no WhatsApp.</p>
+</header>
+
+<main class="grid cols">
+  <!-- CONTROLES -->
+  <section class="card" aria-labelledby="controls">
+    <h2 id="controls">Configurações</h2>
+
+    <div class="row">
+      <div style="grid-column:span 9;">
+        <label for="nome">Nome na etiqueta</label>
+        <input id="nome" type="text" placeholder="Ex.: Cecília Azambuja Viegas" maxlength="40" value="Cecília Azambuja Viegas">
+      </div>
+      <div style="grid-column:span 3;">
+        <label for="corUnica">Cor (texto + borda)</label>
+        <input id="corUnica" type="color" value="#d94b8a">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:6px">
+      <div style="grid-column:span 6;">
+        <label for="cartela">Cartela simulada</label>
+        <select id="cartela">
+          <option value="A3 MIX">A3 MIX (60 P + 15 G)</option>
+          <option value="A3 P">A3 P (120 P)</option>
+          <option value="A3 G">A3 G (30 G)</option>
+        </select>
+      </div>
+      <div style="grid-column:span 6;">
+        <label>Personagem (escolha um card)</label>
+        <div class="tag">As imagens vêm de <code>assets/personagens/</code>. Para adicionar/remover, edite a lista no script.</div>
+      </div>
+    </div>
+
+    <div id="galeria" class="gallery" aria-label="Galeria de personagens"></div>
+
+    <div class="btns" style="margin-top:14px">
+      <button id="btnWhats" class="btn" type="button">Enviar pedido no Whats</button>
+      <button id="btnDownload" class="btn secondary" type="button">Baixar prévia (PNG)</button>
+      <button id="btnReset" class="btn secondary" type="button">Resetar</button>
+    </div>
+    <p class="tag">Fonte fixa: <strong>Calibri Bold</strong> (12 pt na P, 21 pt na G). O tamanho diminui automaticamente se o texto não couber.</p>
+  </section>
+
+  <!-- PRÉVIA -->
+  <section class="card">
+    <h2>Prévia — Etiquetas lado a lado</h2>
+    <p class="tag">Proporções reais (escala 10 px/mm): P = 400×100 px • G = 750×400 px.</p>
+    <div class="preview-grid">
+      <div>
+        <p class="tag">Modelo P (40×10 mm)</p>
+        <canvas id="canvasP" width="400" height="100" aria-label="Prévia etiqueta P"></canvas>
+      </div>
+      <div>
+        <p class="tag">Modelo G (75×40 mm)</p>
+        <canvas id="canvasG" width="750" height="400" aria-label="Prévia etiqueta G"></canvas>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>© lhdigital — etiquetas escolares • pronto para GitHub Pages</footer>
+
+<!-- TENTATIVA DE USAR CALIBRI LOCAL DO SISTEMA -->
+<style>
+  @font-face { font-family: "Calibri"; src: local("Calibri Bold"), local("Calibri"); font-weight: 700; font-style: normal; }
+</style>
+
+<script>
+/* ====== CONFIG ====== */
+const WHATSAPP_NUMBER = '5599999999999'; // <--- troque pelo seu (55 + DDD + número)
+const CHAR_LIST = [
+  // Coloque seus arquivos em assets/personagens/ e liste aqui:
+  { id:"skye", nome:"Skye", arquivo:"skye.png" },
+  { id:"sonic", nome:"Sonic", arquivo:"sonic.png" },
+  { id:"mario", nome:"Super Mario", arquivo:"mario.png" },
+];
+/* tamanhos em px (10 px/mm) */
+const SIZE = {
+  P: { w: 400, h: 100, imgMaxW: 60, imgMaxH: 80, pt: 12 },  // 40×10 mm, imagem ~6×8 mm
+  G: { w: 750, h: 400, imgMaxW: 230, imgMaxH: 300, pt: 21 } // 75×40 mm, imagem ~23×30 mm
+};
+/* ====== HELPERS ====== */
+const el = id => document.getElementById(id);
+const nome = el('nome');
+const corUnica = el('corUnica');
+const cartela = el('cartela');
+const canvasP = el('canvasP');
+const canvasG = el('canvasG');
+const btnWhats = el('btnWhats');
+const btnDownload = el('btnDownload');
+const btnReset = el('btnReset');
+const galeria = el('galeria');
+
+let personagemAtual = null;
+let imgCache = {};
+
+/* monta a galeria de cards */
+function montarGaleria(){
+  galeria.innerHTML = '';
+  CHAR_LIST.forEach((c,i)=>{
+    const wrap = document.createElement('button');
+    wrap.type = 'button';
+    wrap.className = 'card-img';
+    wrap.setAttribute('data-id', c.id);
+    wrap.innerHTML = `<img alt="${c.nome}" src="assets/personagens/${c.arquivo}"><span>${c.nome}</span>`;
+    wrap.addEventListener('click', ()=>{
+      document.querySelectorAll('.card-img').forEach(b=>b.classList.remove('active'));
+      wrap.classList.add('active');
+      personagemAtual = c;
+      carregarImagem(c).then(renderAll);
+    });
+    galeria.appendChild(wrap);
+    if(i===0){ wrap.click(); } // seleciona o primeiro por padrão
+  });
+}
+
+/* carrega e guarda imagem */
+function carregarImagem(c){
+  if(imgCache[c.id]) return Promise.resolve(imgCache[c.id]);
+  return new Promise((res, rej)=>{
+    const im = new Image();
+    im.crossOrigin = 'anonymous';
+    im.onload = ()=>{ imgCache[c.id] = im; res(im); };
+    im.onerror = rej;
+    im.src = `assets/personagens/${c.arquivo}`;
+  });
+}
+
+/* pt -> px considerando a escala do canvas (~254 px/in → 3.528 px/pt) */
+const PT_TO_PX = 3.528;
+
+/* texto auto-ajustável e quebra em linhas */
+function layoutText(ctx, text, fontFamily, targetPt, maxWidth, maxLines){
+  let sizePx = Math.round(targetPt * PT_TO_PX);
+  for(let tries=0; tries<40; tries++){
+    ctx.font = `700 ${sizePx}px "${fontFamily}", "Segoe UI", Arial, sans-serif`;
+    const lines = [];
+    const words = (text||'').trim().split(/\s+/);
+    let line = '';
+    for(const w of words){
+      const test = line ? line + ' ' + w : w;
+      if(ctx.measureText(test).width <= maxWidth){ line = test; }
+      else {
+        if(line) lines.push(line);
+        line = w;
+      }
+    }
+    if(line) lines.push(line);
+    if(lines.length <= maxLines && Math.max(...lines.map(l=>ctx.measureText(l).width)) <= maxWidth){
+      return { sizePx, lines };
+    }
+    sizePx = Math.max(sizePx-2, 10); // reduz até caber (limite mínimo 10 px)
+  }
+  return { sizePx: 10, lines: [text] };
+}
+
+/* desenha etiqueta genérica */
+function desenhar(canvas, opts){
+  const ctx = canvas.getContext('2d');
+  const { w, h } = { w: canvas.width, h: canvas.height };
+  ctx.clearRect(0,0,w,h);
+
+  // fundo
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0,0,w,h);
+
+  // moldura arredondada
+  const radius = Math.round(h*0.25);
+  ctx.lineWidth = Math.max(4, Math.round(h*0.06));
+  ctx.strokeStyle = opts.color;
+  ctx.fillStyle = '#fff';
+
+  ctx.beginPath();
+  const r = radius; const x=6, y=6, bw=w-12, bh=h-12;
+  roundRectPath(ctx, x,y,bw,bh,r);
+  ctx.stroke();
+
+  // área da imagem (esquerda), centralizada verticalmente
+  let img = opts.image;
+  let hasImg = !!img;
+  let imgW=0, imgH=0, ix=0, iy=0;
+
+  if(hasImg){
+    const maxW = opts.imgMaxW, maxH = opts.imgMaxH;
+    const ratio = Math.min(maxW/img.width, maxH/img.height);
+    imgW = Math.round(img.width * ratio);
+    imgH = Math.round(img.height * ratio);
+    ix = Math.round(x + r*0.4);
+    iy = Math.round(y + (bh - imgH)/2);
+    ctx.drawImage(img, ix, iy, imgW, imgH);
+  }
+
+  // texto (centralizado). Se houver imagem, centraliza no espaço restante
+  ctx.fillStyle = opts.color;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  const paddingX = hasImg ? ix + imgW + Math.round(w*0.04) : x + Math.round(w*0.08);
+  const maxTextWidth = hasImg ? (x + bw - paddingX - r*0.3) : (bw - (w*0.16));
+  const targetPt = opts.pt;
+  const maxLines = opts.maxLines || 3;
+
+  const { sizePx, lines } = layoutText(ctx, opts.text, opts.fontFamily, targetPt, maxTextWidth, maxLines);
+  ctx.font = `700 ${sizePx}px "${opts.fontFamily}", "Segoe UI", Arial, sans-serif`;
+  const lineHeight = sizePx * 1.1;
+  const totalH = lineHeight * lines.length;
+
+  const tx = hasImg ? paddingX + maxTextWidth/2 : w/2;
+  const ty = h/2;
+
+  lines.forEach((ln,i)=>{
+    ctx.fillText(ln, tx, ty - totalH/2 + i*lineHeight + lineHeight/2);
+  });
+}
+
+/* path arredondado */
+function roundRectPath(ctx, x,y,w,h,r){
+  const rr = Math.min(r, Math.min(w,h)/2);
+  ctx.moveTo(x+rr, y);
+  ctx.arcTo(x+w, y, x+w, y+h, rr);
+  ctx.arcTo(x+w, y+h, x, y+h, rr);
+  ctx.arcTo(x, y+h, x, y, rr);
+  ctx.arcTo(x, y, x+w, y, rr);
+  ctx.closePath();
+}
+
+/* renderiza P e G */
+function renderAll(){
+  const color = corUnica.value;
+  const nomeTxt = nome.value || 'Seu Nome';
+
+  const fontFamily = 'Calibri'; // tenta Calibri nativa
+  const img = personagemAtual ? imgCache[personagemAtual.id] : null;
+
+  desenhar(canvasP, {
+    color, text: nomeTxt,
+    image: img, fontFamily,
+    imgMaxW: SIZE.P.imgMaxW, imgMaxH: SIZE.P.imgMaxH,
+    pt: SIZE.P.pt, maxLines: 2
+  });
+
+  desenhar(canvasG, {
+    color, text: nomeTxt,
+    image: img, fontFamily,
+    imgMaxW: SIZE.G.imgMaxW, imgMaxH: SIZE.G.imgMaxH,
+    pt: SIZE.G.pt, maxLines: 3
+  });
+}
+
+/* WhatsApp */
+const TEMPLATE = (data) =>
+  `Olá! Quero etiquetas lhdigital.%0A%0A` +
+  `Cartela: ${encodeURIComponent(data.cartela)}%0A` +
+  `Nome: ${encodeURIComponent(data.nome)}%0A` +
+  `Personagem: ${encodeURIComponent(data.personagem)}%0A` +
+  `Cor (texto+borda): ${encodeURIComponent(data.cor)}%0A` +
+  `Fonte: Calibri Bold (P 12pt, G 21pt).%0A` +
+  `%0APrévia visualizada no simulador. Podemos prosseguir?`;
+
+btnWhats.addEventListener('click', ()=>{
+  const personagem = personagemAtual ? personagemAtual.nome : '—';
+  const text = TEMPLATE({
+    cartela: cartela.value,
+    nome: nome.value || '—',
+    personagem,
+    cor: corUnica.value
+  });
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`,'_blank');
+});
+
+/* Baixar prévia */
+btnDownload.addEventListener('click', ()=>{
+  const w = Math.max(canvasP.width, canvasG.width);
+  const gap = 40;
+  const out = document.createElement('canvas');
+  out.width = w;
+  out.height = canvasP.height + gap + canvasG.height;
+  const ctx = out.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0,0,out.width,out.height);
+  ctx.drawImage(canvasP, (w - canvasP.width)/2, 0);
+  ctx.fillStyle = '#e5e7eb'; ctx.fillRect(0, canvasP.height + gap/2 - 1, w, 2);
+  ctx.drawImage(canvasG, (w - canvasG.width)/2, canvasP.height + gap);
+
+  const a = document.createElement('a');
+  a.download = `previa_${(nome.value||'etiquetas').toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`;
+  a.href = out.toDataURL('image/png');
+  a.click();
+});
+
+/* Reset */
+btnReset.addEventListener('click', ()=>{
+  nome.value = 'Cecília Azambuja Viegas';
+  corUnica.value = '#d94b8a';
+  cartela.value = 'A3 MIX';
+  if(galeria.firstElementChild) galeria.firstElementChild.click();
+  renderAll();
+});
+
+/* Eventos */
+[nome, corUnica, cartela].forEach(i=>{
+  i.addEventListener('input', renderAll);
+  i.addEventListener('change', renderAll);
+});
+
+/* start */
+montarGaleria();
+renderAll();
+</script>
+</body>
+</html>
