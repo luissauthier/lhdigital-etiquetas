@@ -43,7 +43,7 @@
 
   /* --- Galeria com limite e scroll --- */
   .gallery-wrap{margin-top:8px}
-  .gallery{display:grid;gap:10px;grid-template-columns:repeat(6,1fr);max-height:240px;overflow:auto;padding-right:4px}
+  .gallery{display:grid;gap:10px;grid-template-columns:repeat(6,1fr);max-height:240px;overflow:auto;padding:4px}
   .card-img{background:#0c0f1c;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:8px;cursor:pointer;display:grid;gap:6px;place-items:center}
   .card-img img{width:100%;height:92px;object-fit:contain}
   .card-img span{font-size:12px;color:var(--muted);text-align:center}
@@ -51,7 +51,7 @@
 
   /* mobile: cards menores e scroll horizontal */
   @media (max-width:680px){
-    .gallery{display:flex;overflow-x:auto;overflow-y:hidden;gap:10px;max-height:none;padding-bottom:6px}
+    .gallery{display:flex;overflow-x:auto;overflow-y:hidden;gap:10px;max-height:none;padding:6px}
     .card-img{min-width:88px;max-width:88px}
     .card-img img{height:72px}
   }
@@ -76,7 +76,7 @@
   <!-- PRÉVIA (com classe para reordenação em mobile) -->
   <section class="card section-preview">
     <h2>Prévia — Etiquetas lado a lado</h2>
-    <p class="tag">Proporções reais (escala 10 px/mm): P = 400×100 px • G = 750×400 px.</p>
+    <p class="tag">Proporções reais: P = 40×10 mm • G = 75x40 mm.</p>
     <div class="preview-grid">
       <div>
         <p class="tag">Modelo P (40×10 mm)</p>
@@ -91,16 +91,16 @@
 
   <!-- CONTROLES -->
   <section class="card" aria-labelledby="controls">
-    <h2 id="controls">Configurações</h2>
+    <h2 id="controls">Editar modelo</h2>
 
     <div class="row">
       <div style="grid-column:span 9;">
         <label for="nome">Nome na etiqueta</label>
-        <input id="nome" type="text" placeholder="Ex.: Cecília Azambuja Viegas" maxlength="48" value="Cecília Azambuja Viegas">
+        <input id="nome" type="text" placeholder="Ex.: João Medeiros da Silva" maxlength="48" value="João Medeiros da Silva">
       </div>
       <div style="grid-column:span 3;">
         <label for="corUnica">Cor (texto + borda)</label>
-        <input id="corUnica" type="color" value="#d94b8a">
+        <input id="corUnica" type="color" value="#0000FF">
       </div>
     </div>
 
@@ -108,14 +108,14 @@
       <div style="grid-column:span 6;">
         <label for="cartela">Cartela simulada</label>
         <select id="cartela">
-          <option value="A3 MIX">A3 MIX (60 P + 15 G)</option>
-          <option value="A3 P">A3 P (120 P)</option>
-          <option value="A3 G">A3 G (30 G)</option>
+          <option value="A3 MIX">A3 MIX (120 P + 12 G)</option>
+          <option value="A3 P">A3 P (225 P)</option>
+          <option value="A3 G">A3 G (27 G)</option>
         </select>
       </div>
       <div style="grid-column:span 6;">
         <label>Personagem (escolha um card)</label>
-        <div class="tag">As imagens vêm de <code>assets/personagens/</code>. Para adicionar/remover, edite a lista no script.</div>
+        <div class="tag">Para personalização, entre em contato pelo WhatsApp e solicite modelo</div>
       </div>
     </div>
 
@@ -128,7 +128,6 @@
       <button id="btnDownload" class="btn secondary" type="button">Baixar prévia (PNG)</button>
       <button id="btnReset" class="btn secondary" type="button">Resetar</button>
     </div>
-    <p class="tag">Fonte fixa: <strong>Calibri Bold</strong> (12 pt na P, 21 pt na G). O tamanho diminui automaticamente se o texto não couber.</p>
   </section>
 </main>
 
@@ -332,8 +331,8 @@ btnDownload.addEventListener('click', ()=>{
 });
 
 btnReset.addEventListener('click', ()=>{
-  nome.value = 'Cecília Azambuja Viegas';
-  corUnica.value = '#d94b8a';
+  nome.value = 'João Medeiros da Silva';
+  corUnica.value = '#0000FF';
   cartela.value = 'A3 MIX';
   document.querySelector('.card-img[data-id="nenhum"]')?.click();
   renderAll();
