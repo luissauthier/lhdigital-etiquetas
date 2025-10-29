@@ -299,13 +299,13 @@ function renderAll(){
 
 /* WhatsApp */
 const TEMPLATE = (data) =>
-  `Olá! Quero etiquetas lhdigital.%0A%0A` +
-  `Cartela: ${encodeURIComponent(data.cartela)}%0A` +
-  `Nome: ${encodeURIComponent(data.nome)}%0A` +
-  `Personagem: ${encodeURIComponent(data.personagem)}%0A` +
-  `Cor (texto+borda): ${encodeURIComponent(data.cor)}%0A` +
-  `Fonte: Calibri Bold (P 12pt, G 21pt).%0A%0A` +
-  `Prévia visualizada no simulador. Podemos prosseguir?`;
+  `🧾 *Pedido de etiquetas escolares — lhdigital* %0A%0A` +
+  `Olá! Gostaria de fazer um pedido de etiquetas personalizadas:%0A%0A` +
+  `• *Cartela:* ${encodeURIComponent(data.cartela)}%0A` +
+  `• *Nome na etiqueta:* ${encodeURIComponent(data.nome)}%0A` +
+  `• *Tema/Personagem:* ${encodeURIComponent(data.personagem)}%0A` +
+  `• *Cor (texto + borda):* ${encodeURIComponent(data.cor)}%0A%0A` +
+  `(Prévia gerada no simulador lhdigital)`;
 
 btnWhats.addEventListener('click', ()=>{
   const personagem = personagemAtual ? personagemAtual.nome : 'Nenhum';
