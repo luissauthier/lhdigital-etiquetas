@@ -2,84 +2,101 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>lhdigital — Simulador de Etiquetas</title>
 <link rel="icon" href="assets/favicon.ico" type="image/png">
 <meta name="description" content="Simule etiquetas P (40×10 mm) e G (75×40 mm). Escolha personagem e cor única (texto+borda) e envie o pedido no WhatsApp.">
+<meta name="theme-color" content="#0f1220">
 <style>
   :root{
     --bg:#0f1220; --card:#161a2b; --ink:#e8eaf6; --muted:#aab1d1;
     --accent:#7aa5ff; --radius:14px; --gap:16px;
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),#0b0e1a);color:var(--ink)}
+  html,body{margin:0; padding:0; overflow-x:hidden; background:#0b0e1a}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),#0b0e1a);color:var(--ink)}
   header,main,footer{max-width:1100px;margin:0 auto;padding:24px clamp(16px,3vw,24px)}
-  header h1{margin:0;font-size:22px;display:flex;align-items:center;gap:12px}
-  header img.logo{width:36px;height:36px;object-fit:contain;border-radius:8px;background:transparent}
+  header h1{margin:0;font-size:22px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  header img.logo{width:36px;height:36px;object-fit:contain;border-radius:8px;background:transparent;flex:0 0 auto}
   header p{margin:8px 0 0;color:var(--muted);font-size:14px}
+  .header-actions{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap}
 
-  .grid{display:grid;gap:var(--gap)}
+  .grid{display:grid;gap:var(--gap); max-width:100%}
   .cols{grid-template-columns:1fr 1fr}
   @media (max-width:960px){.cols{grid-template-columns:1fr}}
-  .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);box-shadow:0 12px 30px rgba(0,0,0,.25);padding:18px}
+
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);box-shadow:0 12px 30px rgba(0,0,0,.25);padding:18px; overflow:hidden}
   .card h2{margin:4px 0 14px;font-size:18px}
-  .row{display:grid;gap:12px;grid-template-columns:repeat(12,1fr);align-items:end}
+  .row{display:grid;gap:12px;grid-template-columns:repeat(12,1fr);align-items:end; max-width:100%}
   .row>*{min-width:0}
-  label{font-size:12px;color:var(--muted);display:block;margin:0 0 6px;white-space:nowrap} /* evita quebra */
+  label{font-size:12px;color:var(--muted);display:block;margin:0 0 6px;white-space:nowrap}
   input[type="text"], select{
     width:100%;padding:10px 12px;background:#0c0f1c;color:var(--ink);
     border:1px solid rgba(255,255,255,.08);border-radius:10px;outline:none;min-width:0
   }
-  /* input com scroll horizontal se texto longo */
   input[type="text"]{overflow-x:auto;text-overflow:clip}
   input[type="color"]{width:100%;height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:#0c0f1c}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:linear-gradient(160deg,var(--accent),#5dd4b5);color:#0a0d18;font-weight:700;text-decoration:none;cursor:pointer}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:linear-gradient(160deg,var(--accent),#5dd4b5);color:#0a0d18;font-weight:700;text-decoration:none;cursor:pointer;flex:0 0 auto}
   .btn.secondary{background:transparent;color:var(--ink)}
+  .btn.block{width:100%;justify-content:center}
   .btns{display:flex;flex-wrap:wrap;gap:12px}
   .tag{font-size:12px;color:var(--muted);margin:6px 0 12px}
-  canvas{width:100%;height:auto;display:block;background:#fff;border-radius:12px;border:1px solid rgba(255,255,255,.08)}
-  .preview-grid{display:grid;gap:var(--gap);grid-template-columns:1fr 1fr}
-  @media (max-width:720px){.preview-grid{grid-template-columns:1fr}}
 
-  /* --- Galeria com limite e scroll --- */
+  /* canvases responsivos e “safe” no mobile */
+  .preview-grid{display:grid;gap:var(--gap);grid-template-columns:1fr 1fr; max-width:100%}
+  .preview-grid canvas{width:100%; height:auto; display:block; background:#fff;border-radius:12px;border:1px solid rgba(255,255,255,.08); max-width:100%}
+  @media (max-width:720px){
+    .preview-grid{grid-template-columns:1fr}
+  }
+
+  /* Galeria com limite e scroll */
   .gallery-wrap{margin-top:8px}
   .gallery{display:grid;gap:10px;grid-template-columns:repeat(6,1fr);max-height:240px;overflow:auto;padding:4px}
-  .card-img{background:#0c0f1c;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:8px;cursor:pointer;display:grid;gap:6px;place-items:center}
+  .card-img{background:#0c0f1c;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:8px;cursor:pointer;display:grid;gap:6px;place-items:center; min-width:0}
   .card-img img{width:100%;height:92px;object-fit:contain}
   .card-img span{font-size:12px;color:var(--muted);text-align:center}
   .card-img.active{outline:2px solid #5dd4b5}
 
-  /* mobile: cards menores e scroll horizontal */
+  /* mobile: cards menores e scroll horizontal, sem estourar a largura */
   @media (max-width:680px){
     .gallery{display:flex;overflow-x:auto;overflow-y:hidden;gap:10px;max-height:none;padding:6px}
-    .card-img{min-width:88px;max-width:88px}
+    .card-img{min-width:88px;max-width:88px;flex:0 0 auto}
     .card-img img{height:72px}
   }
 
   footer{color:var(--muted);font-size:12px;text-align:center}
 
-  /* Prévia primeiro no mobile: reordena as seções */
+  /* Prévia primeiro no mobile */
   @media (max-width:960px){
     .section-preview{order:-1}
   }
+
+  /* Seção de avisos */
+  .info{display:grid;gap:10px}
+  .note{font-size:12px;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px}
+  .note strong{color:var(--ink)}
 </style>
 </head>
 <body>
 <header>
-  <!-- troque assets/logo.png pelo seu arquivo -->
   <img class="logo" src="assets/logo.png" alt="lhdigital">
   <h1>lhdigital — Simulador de Etiquetas</h1>
   <p>Pré-visualize as etiquetas <strong>P (40×10 mm)</strong> e <strong>G (75×40 mm)</strong>, escolha personagem e cor única (texto+borda) e envie o pedido no WhatsApp.</p>
+  <div class="header-actions">
+    <a class="btn" href="assets/catalogo.pdf" target="_blank" rel="noopener" aria-label="Abrir catálogo em PDF">Ver catálogo (PDF)</a>
+    <a class="btn secondary" href="#duvidas">Dúvidas & cuidados</a>
+  </div>
 </header>
 
 <main class="grid cols">
-  <!-- PRÉVIA (com classe para reordenação em mobile) -->
-  <section class="card section-preview">
-    <h2>Prévia — Etiquetas lado a lado</h2>
-    <p class="tag">Proporções reais: P = 40×10 mm • G = 75x40 mm.</p>
+  <!-- PRÉVIA -->
+  <section class="card section-preview" aria-labelledby="previa-title">
+    <h2 id="previa-title">Prévia — Etiquetas lado a lado</h2>
+    <p class="tag">Proporções reais: P = 40×10 mm • G = 75×40 mm.</p>
     <div class="preview-grid">
       <div>
         <p class="tag">Modelo P (40×10 mm)</p>
+        <!-- canvas com resolução interna alta, mas responsivo no CSS -->
         <canvas id="canvasP" width="400" height="100" aria-label="Prévia etiqueta P"></canvas>
       </div>
       <div>
@@ -96,18 +113,18 @@
     <div class="row">
       <div style="grid-column:span 9;">
         <label for="nome">Nome na etiqueta</label>
-        <input id="nome" type="text" placeholder="Ex.: João Medeiros da Silva" maxlength="48" value="João Medeiros da Silva">
+        <input id="nome" type="text" placeholder="Ex.: João Medeiros da Silva" maxlength="48" value="João Medeiros da Silva" autocomplete="name">
       </div>
       <div style="grid-column:span 3;">
         <label for="corUnica">Cor (texto + borda)</label>
-        <input id="corUnica" type="color" value="#0000FF">
+        <input id="corUnica" type="color" value="#0000FF" aria-label="Selecionar cor">
       </div>
     </div>
 
     <div class="row" style="margin-top:6px">
       <div style="grid-column:span 6;">
         <label for="cartela">Cartela simulada</label>
-        <select id="cartela">
+        <select id="cartela" aria-label="Escolher tipo de cartela">
           <option value="A3 MIX">A3 MIX (120 P + 12 G)</option>
           <option value="A3 P">A3 P (225 P)</option>
           <option value="A3 G">A3 G (27 G)</option>
@@ -115,7 +132,7 @@
       </div>
       <div style="grid-column:span 6;">
         <label>Personagem (escolha um card)</label>
-        <div class="tag">Para personalização, entre em contato pelo WhatsApp e solicite modelo</div>
+        <div class="tag">Para personalização, entre em contato pelo WhatsApp e solicite modelo.</div>
       </div>
     </div>
 
@@ -124,9 +141,23 @@
     </div>
 
     <div class="btns" style="margin-top:14px">
-      <button id="btnWhats" class="btn" type="button">Enviar pedido no Whats</button>
+      <button id="btnWhats" class="btn" type="button" aria-label="Enviar pedido pelo WhatsApp">Enviar pedido no Whats</button>
+      <a class="btn secondary" href="assets/catalogo.pdf" target="_blank" rel="noopener">Ver catálogo (PDF)</a>
       <button id="btnDownload" class="btn secondary" type="button">Baixar prévia (PNG)</button>
       <button id="btnReset" class="btn secondary" type="button">Resetar</button>
+    </div>
+  </section>
+
+  <!-- INFO / MENSAGENS -->
+  <section id="duvidas" class="card" aria-labelledby="infos-title">
+    <h2 id="infos-title">Dúvidas, personalizações e cuidados</h2>
+    <div class="info">
+      <div class="note">
+        <strong>Outras personalizações:</strong> trabalhamos com linha própria e <em>temas sob consulta</em>. Fale conosco pelo WhatsApp para cores, ícones e variações.
+      </div>
+      <div class="note">
+        <strong>Cuidados com o vinil:</strong> após a entrega, o cliente é responsável pelo armazenamento e uso. Manter em <strong>local seco e arejado</strong>. Evite calor/umidade — o vinil pode <strong>encolher</strong>.
+      </div>
     </div>
   </section>
 </main>
@@ -140,21 +171,21 @@
 
 <script>
 /* ====== CONFIG ====== */
-const WHATSAPP_NUMBER = '5551993745430'; // <--- troque pelo seu (55 + DDD + número)
+const WHATSAPP_NUMBER = '5551993745430'; // (55 + DDD + número)
+const CATALOG_URL = 'assets/catalogo.pdf';
 
-/* Lista de personagens — inclua os seus arquivos aqui.
-   Agora com a opção "Nenhum" (sem imagem). */
+/* Lista de personagens — padrão "Nenhum" (sem imagem) */
 const CHAR_LIST = [
   { id:"nenhum", nome:"Nenhum", arquivo:null },
-  { id:"skye",  nome:"Skye",        arquivo:"skye.png" },
-  { id:"sonic", nome:"Sonic",       arquivo:"sonic.png" },
-  { id:"mario", nome:"Super Mario", arquivo:"mario.png" },
+  { id:"skye",  nome:"Skye",        arquivo:"skye.webp" },
+  { id:"sonic", nome:"Sonic",       arquivo:"sonic.webp" },
+  { id:"mario", nome:"Super Mario", arquivo:"mario.webp" },
 ];
 
 /* tamanhos em px (10 px/mm) */
 const SIZE = {
-  P: { w: 400, h: 100, imgMaxW: 60,  imgMaxH: 80,  pt: 12 }, // 40×10 mm; img ~6×8 mm
-  G: { w: 750, h: 400, imgMaxW: 230, imgMaxH: 300, pt: 21 }  // 75×40 mm; img ~23×30 mm
+  P: { w: 400, h: 100, imgMaxW: 60,  imgMaxH: 80,  pt: 12 }, // 40×10 mm
+  G: { w: 750, h: 400, imgMaxW: 230, imgMaxH: 300, pt: 21 }  // 75×40 mm
 };
 
 const el = id => document.getElementById(id);
@@ -178,13 +209,18 @@ function montarGaleria(){
     wrap.type = 'button';
     wrap.className = 'card-img';
     wrap.setAttribute('data-id', c.id);
+    wrap.setAttribute('aria-pressed', i===0 ? 'true' : 'false');
     const imgTag = c.arquivo
-      ? `<img alt="${c.nome}" src="assets/personagens/${c.arquivo}">`
+      ? `<img alt="${c.nome}" src="assets/personagens/${c.arquivo}" loading="lazy">`
       : `<img alt="Nenhum" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='120'%3E%3Crect width='100%25' height='100%25' rx='16' ry='16' fill='%230c0f1c' stroke='%23aab1d1' stroke-dasharray='6%2C6'/%3E%3Cpath d='M20 100 L140 20' stroke='%23aab1d1' stroke-width='10'/%3E%3C/svg%3E">`;
     wrap.innerHTML = `${imgTag}<span>${c.nome}</span>`;
     wrap.addEventListener('click', ()=>{
-      document.querySelectorAll('.card-img').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.card-img').forEach(b=>{
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed','false');
+      });
       wrap.classList.add('active');
+      wrap.setAttribute('aria-pressed','true');
       personagemAtual = c;
       if(c.arquivo) carregarImagem(c).then(renderAll); else renderAll();
     });
@@ -265,8 +301,7 @@ function desenhar(canvas, opts){
     imgH = Math.round(img.height * ratio);
     ix = Math.round(x + radius*0.4);
     iy = Math.round(y + (bh - imgH)/2);
-    const ctxImg = canvas.getContext('2d');
-    ctxImg.drawImage(img, ix, iy, imgW, imgH);
+    ctx.drawImage(img, ix, iy, imgW, imgH);
   }
 
   // texto
@@ -297,7 +332,7 @@ function renderAll(){
   desenhar(canvasG, { color, text: nomeTxt, image: img, fontFamily, imgMaxW: SIZE.G.imgMaxW, imgMaxH: SIZE.G.imgMaxH, pt: SIZE.G.pt, maxLines: 3 });
 }
 
-/* WhatsApp */
+/* WhatsApp — template com preço, entrada e prazo */
 const TEMPLATE = (data) =>
   `🧾 *Pedido de etiquetas escolares — lhdigital* %0A%0A` +
   `Olá! Gostaria de fazer um pedido de etiquetas personalizadas:%0A%0A` +
@@ -305,12 +340,12 @@ const TEMPLATE = (data) =>
   `• *Nome na etiqueta:* ${encodeURIComponent(data.nome)}%0A` +
   `• *Tema/Personagem:* ${encodeURIComponent(data.personagem)}%0A` +
   `• *Cor (texto + borda):* ${encodeURIComponent(data.cor)}%0A%0A` +
-  `(Prévia gerada no simulador lhdigital)`;
+  `(Prévia gerada no simulador lhdigital — via Site)`;
 
 btnWhats.addEventListener('click', ()=>{
   const personagem = personagemAtual ? personagemAtual.nome : 'Nenhum';
   const text = TEMPLATE({ cartela: cartela.value, nome: nome.value || '—', personagem, cor: corUnica.value });
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`,'_blank');
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?type=phone_number&text=${text}`,'_blank');
 });
 
 btnDownload.addEventListener('click', ()=>{
