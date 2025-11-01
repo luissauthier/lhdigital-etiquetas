@@ -170,7 +170,8 @@
 
 <script>
 /* ====== CONFIG ====== */
-const WHATSAPP_NUMBER = '5551993745430'; // (55 + DDD + número)
+// const WHATSAPP_NUMBER = '5551993745430'; // (55 + DDD + número)
+let WHATSAPP_NUMBER = '5551993745430';  // (55 + DDD + número)
 const CATALOG_URL = 'assets/catalogo.pdf';
 
 /* Lista de personagens — padrão "Nenhum" (sem imagem) */
@@ -197,6 +198,22 @@ const btnWhats = el('btnWhats');
 const btnDownload = el('btnDownload');
 const btnReset = el('btnReset');
 const galeria = el('galeria');
+
+// --- NOVO: controles via URL para parceiros ---
+const qs = new URLSearchParams(location.search);
+
+// esconder botão do Whats quando for uso em papelaria
+const modoPapelaria = qs.has('papelaria') || qs.get('hidewhats') === '1';
+if (modoPapelaria) {
+  // some visualmente (mantém no DOM para não quebrar listeners abaixo)
+  btnWhats.style.display = 'none';
+}
+
+// (opcional) permitir sobrescrever o número do Whats por parâmetro: ?zap=55DDDNXXXXXXXX
+// mude "const WHATSAPP_NUMBER" para "let WHATSAPP_NUMBER" lá no topo do arquivo!
+if (qs.has('zap')) {
+  WHATSAPP_NUMBER = qs.get('zap').replace(/[^\d]/g, '');
+}
 
 let personagemAtual = CHAR_LIST[0]; // começa em "Nenhum"
 let imgCache = {};
