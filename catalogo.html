@@ -37,7 +37,7 @@ hr{border:none;height:1px;background:rgba(255,255,255,.08);margin:14px 0}
   <h1>Catálogo de Etiquetas — 2026</h1>
   <p class="note">Use os filtros abaixo para explorar. Clique em “Ver no simulador” para abrir o modelo já selecionado. As imagens exibem uma prévia; os tamanhos de fonte e imagem podem ser ajustados na versão final.</p>
   <div class="controls">
-      <a id="backSim" class="btn" href="#" rel="noopener">Voltar ao simulador</a>
+      <a id="backSim" class="btn" href="/lhdigital-etiquetas/" rel="noopener">Voltar ao simulador</a>
       <select id="catSelect" aria-label="Filtrar por categoria">
       <option value="">Categoria: Todas</option>
       <option>Desenhos & Séries</option>
@@ -65,16 +65,16 @@ hr{border:none;height:1px;background:rgba(255,255,255,.08);margin:14px 0}
 <script>
 // CONFIG
 let WHATSAPP_NUMBER = '5551993745430';
-const SIMULADOR_URL = './index.html';
+const SIMULADOR_URL = '/lhdigital-etiquetas/';
 
+// --- CONTROLE DE PARÂMETROS (herda e propaga entre telas)
+const qs = new URLSearchParams(location.search);
+
+const modoPapelaria = qs.has('papelaria') || qs.get('hidewhats') === '1';
 // --- zap opcional (coerente com o simulador)
 if (qs.has('zap')) {
   WHATSAPP_NUMBER = qs.get('zap').replace(/[^\d]/g, '');
 }
-
-// --- CONTROLE DE PARÂMETROS (herda e propaga entre telas)
-const qs = new URLSearchParams(location.search);
-const modoPapelaria = qs.has('papelaria') || qs.get('hidewhats') === '1';
 const passParams = new URLSearchParams();
 ['papelaria','hidewhats','zap'].forEach(k=>{
   if (qs.has(k)) passParams.set(k, qs.get(k) || '');
