@@ -37,6 +37,7 @@ hr{border:none;height:1px;background:rgba(255,255,255,.08);margin:14px 0}
   <h1>Catálogo de Etiquetas — 2026</h1>
   <p class="note">Use os filtros abaixo para explorar. Clique em “Ver no simulador” para abrir o modelo já selecionado. As imagens exibem uma prévia; os tamanhos de fonte e imagem podem ser ajustados na versão final.</p>
   <div class="controls">
+      <a class="btn" href="/lhdigital-etiquetas/" rel="noopener">Voltar ao simulador</a>
       <select id="catSelect" aria-label="Filtrar por categoria">
       <option value="">Categoria: Todas</option>
       <option>Desenhos & Séries</option>
@@ -150,7 +151,7 @@ function card(it){
       ${it.tags.map(t=>`<span class="badge">${t}</span>`).join('')}
     </div>
     <div class="actions">
-      <a class="btn" href="${SIMULADOR_URL}?personagem=${encodeURIComponent(it.id)}" target="_blank" rel="noopener">Ver no simulador</a>
+      <a class="btn" href="${SIMULADOR_URL}?personagem=${encodeURIComponent(it.id)} rel="noopener">Ver no simulador</a>
       <a class="btn secondary" href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Quero etiquetas do tema: '+it.nome)}" target="_blank" rel="noopener">Pedir no Whats</a>
     </div>`;
   return el;
