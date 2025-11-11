@@ -37,7 +37,7 @@ hr{border:none;height:1px;background:rgba(255,255,255,.08);margin:14px 0}
   <h1>Catálogo de Etiquetas — 2026</h1>
   <p class="note">Use os filtros abaixo para explorar. Clique em “Ver no simulador” para abrir o modelo já selecionado. As imagens exibem uma prévia; os tamanhos de fonte e imagem podem ser ajustados na versão final.</p>
   <div class="controls">
-      <a class="btn" href="/lhdigital-etiquetas/" rel="noopener">Voltar ao simulador</a>
+      <a id="backSim" class="btn" href="#" rel="noopener">Voltar ao simulador</a>
       <select id="catSelect" aria-label="Filtrar por categoria">
       <option value="">Categoria: Todas</option>
       <option>Desenhos & Séries</option>
@@ -64,8 +64,26 @@ hr{border:none;height:1px;background:rgba(255,255,255,.08);margin:14px 0}
 
 <script>
 // CONFIG
-const WHATSAPP_NUMBER = '5551993745430';
+let WHATSAPP_NUMBER = '5551993745430';
 const SIMULADOR_URL = './index.html';
+
+// --- zap opcional (coerente com o simulador)
+if (qs.has('zap')) {
+  WHATSAPP_NUMBER = qs.get('zap').replace(/[^\d]/g, '');
+}
+
+// --- CONTROLE DE PARÂMETROS (herda e propaga entre telas)
+const qs = new URLSearchParams(location.search);
+const modoPapelaria = qs.has('papelaria') || qs.get('hidewhats') === '1';
+const passParams = new URLSearchParams();
+['papelaria','hidewhats','zap'].forEach(k=>{
+  if (qs.has(k)) passParams.set(k, qs.get(k) || '');
+});
+
+// Preenche o "Voltar ao simulador" já com os mesmos parâmetros
+const back = document.getElementById('backSim');
+if (back) back.href = SIMULADOR_URL + (passParams.toString() ? `?${passParams}` : '');
+
 
 // DATA — mapeado para segmentos/tier/tags segundo o guia.
 const ITEMS = [
@@ -129,30 +147,48 @@ const tierSel = document.getElementById('tierSelect');
 const q = document.getElementById('q');
 
 function render(){
-  const seg = segSel.value; const tier = tierSel.value; const term = q.value.toLowerCase().trim();
-  const data = ITEMS.filter(it=>
-    (!seg || it.categoria===seg) && (!tier || it.tier===tier) &&
-    (!term || it.nome.toLowerCase().includes(term) || it.tags.some(t=>t.includes(term)))
+  const seg = segSel.value;
+  const tier = tierSel.value;
+  const term = q.value.toLowerCase().trim();
+
+  const data = ITEMS.filter(it =>
+    (!seg || it.segmento === seg) &&
+    (!tier || it.tier === tier) &&
+    (!term ||
+      it.nome.toLowerCase().includes(term) ||
+      it.tags.some(t => String(t).toLowerCase().includes(term))
+    )
   );
 
   listEl.innerHTML = '';
-  data.forEach(it=> listEl.appendChild(card(it)));
-  if(!data.length){ listEl.innerHTML = `<p class="note">Nenhum item encontrado com os filtros atuais.</p>` }
+  data.forEach(it => listEl.appendChild(card(it)));
+  if (!data.length) {
+    listEl.innerHTML = `<p class="note">Nenhum item encontrado com os filtros atuais.</p>`;
+  }
 }
 
 function card(it){
   const el = document.createElement('article'); el.className='card';
+
+  // Monta link para o simulador preservando parâmetros + personagem
+  const simQS = new URLSearchParams(passParams);
+  simQS.set('personagem', it.id);
+  const simHref = `${SIMULADOR_URL}?${simQS.toString()}`;
+
+  // Link do Whats (mostra somente se não estiver em modo papelaria)
+  const whatsHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Quero etiquetas do tema: '+it.nome)}`;
+
   el.innerHTML = `
     <div class="thumb"><img alt="${it.nome}" src="assets/etiquetas/${it.id}_preview.png" loading="lazy"></div>
     <div class="title">${it.nome}</div>
     <div class="badges">
-      <span class="badge">${it.categoria}</span>
+      <span class="badge">${it.segmento}</span>
       <span class="badge">${it.tier}</span>
       ${it.tags.map(t=>`<span class="badge">${t}</span>`).join('')}
     </div>
     <div class="actions">
-      <a class="btn" href="${SIMULADOR_URL}?personagem=${encodeURIComponent(it.id)} rel="noopener">Ver no simulador</a>
-      <a class="btn secondary" href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Quero etiquetas do tema: '+it.nome)}" target="_blank" rel="noopener">Pedir no Whats</a>
+      <a class="btn" href="${simHref}" rel="noopener">Ver no simulador</a>
+      ${!modoPapelaria ? `<a class="btn secondary" href="${whatsHref}" target="_blank" rel="noopener">Pedir no Whats</a>` : ''}
     </div>`;
   return el;
 }
