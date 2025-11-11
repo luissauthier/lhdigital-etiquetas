@@ -4,308 +4,162 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>lhdigital — Catálogo de Etiquetas</title>
-<meta name="theme-color" content="#0f1220">
 <link rel="icon" href="assets/favicon.ico" type="image/png">
-<meta name="description" content="Catálogo online de etiquetas escolares. Veja os modelos por seção e simule nas versões P e G. Modo admin por URL para cadastrar modelos.">
-
+<meta name="description" content="Catálogo de etiquetas por segmentos (Pré-escolar, Fundamental I, Tweens, Neutros).">
+<meta name="theme-color" content="#0f1220">
 <style>
-:root{
-  --bg:#0f1220; --ink:#e8eaf6; --muted:#aab1d1; --card:#161a2b;
-  --accent:#7aa5ff; --ok:#5dd4b5; --radius:14px; --gap:16px;
-}
+:root{--bg:#0f1220;--ink:#e8eaf6;--muted:#aab1d1;--card:#161a2b;--accent:#7aa5ff;--gap:16px;--radius:14px}
 *{box-sizing:border-box}
-html,body{margin:0;background:linear-gradient(180deg,var(--bg),#0b0e1a);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-a{color:inherit}
-header,main{max-width:1120px;margin:0 auto;padding:24px clamp(16px,3vw,24px)}
-header h1{display:flex;gap:12px;align-items:center;margin:0 0 8px;font-size:22px}
-.logo{width:36px;height:36px;border-radius:8px}
-.header-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.btn{display:inline-flex;gap:10px;align-items:center;justify-content:center;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:linear-gradient(160deg,var(--accent),var(--ok));color:#0a0d18;font-weight:700;text-decoration:none;cursor:pointer}
-.btn.secondary{background:transparent;color:var(--ink)}
-.btn.small{padding:8px 10px;font-size:13px}
-.badge{font-size:11px;color:#0a0d18;background:var(--ok);padding:2px 8px;border-radius:999px;font-weight:700}
-.controls{display:grid;gap:10px;grid-template-columns:2fr 1fr; margin-top:14px}
-.controls input, .controls select{
-  width:100%;padding:10px 12px;background:#0c0f1c;color:var(--ink);
-  border:1px solid rgba(255,255,255,.12);border-radius:10px
-}
-.section{margin-top:26px}
-.section h2{margin:0 0 10px;font-size:18px}
-.grid{display:grid;gap:var(--gap);grid-template-columns:repeat(4,1fr)}
+body{margin:0;background:linear-gradient(180deg,#0f1220,#0b0e1a);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+main,header{max-width:1100px;margin:0 auto;padding:24px clamp(16px,3vw,24px)}
+header h1{margin:0;font-size:22px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+select,input[type="search"]{background:#0c0f1c;color:var(--ink);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 12px}
+.grid{display:grid;gap:var(--gap);grid-template-columns:repeat(3,1fr)}
 @media (max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:560px){.grid{grid-template-columns:1fr}}
-.card{
-  background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:var(--radius); overflow:hidden; display:flex; flex-direction:column
-}
-.card .thumb{background:#0c0f1c;display:grid;place-items:center;aspect-ratio:4/3;border-bottom:1px solid rgba(255,255,255,.06)}
-.card img{width:100%;height:100%;object-fit:contain}
-.card .body{padding:12px;display:grid;gap:10px}
-.card h3{margin:0;font-size:15px;line-height:1.2}
-.tags{display:flex;gap:6px;flex-wrap:wrap}
-.tag{font-size:11px;color:var(--muted);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);padding:2px 8px;border-radius:999px}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-.muted{color:var(--muted);font-size:13px}
-hr.sep{border:none;border-top:1px solid rgba(255,255,255,.06);margin:18px 0}
-
-footer{color:var(--muted);font-size:12px;text-align:center;padding:24px}
-
-/* ADMIN */
-.admin-bar{position:sticky;top:0;background:#0b0e1a;z-index:3;border-bottom:1px solid rgba(255,255,255,.08);padding:10px 0;margin-bottom:12px}
-.admin{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;display:grid;gap:10px}
-.admin .grid2{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
-.admin label{font-size:12px;color:var(--muted)}
-.admin input[type="text"], .admin select, .admin textarea, .admin input[type="file"]{
-  width:100%;padding:10px;background:#0c0f1c;color:var(--ink);
-  border:1px solid rgba(255,255,255,.12);border-radius:10px
-}
-.preview-mini{display:flex;gap:10px;align-items:center}
-.preview-mini img{width:72px;height:54px;object-fit:contain;background:#0c0f1c;border:1px solid rgba(255,255,255,.12);border-radius:8px}
-kbd{background:#11152a;border:1px solid rgba(255,255,255,.12);padding:2px 6px;border-radius:6px;font-size:12px}
+@media (max-width:640px){.grid{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:10px}
+.card .thumb{background:#0c0f1c;border:1px solid rgba(255,255,255,.08);border-radius:12px;display:grid;place-items:center;height:170px;overflow:hidden}
+.card .thumb img{max-width:100%;max-height:100%;object-fit:contain}
+.title{display:flex;align-items:center;gap:8px;font-weight:700}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{font-size:11px;color:var(--muted);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:4px 8px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(160deg,var(--accent),#5dd4b5);color:#0a0d18;text-decoration:none;font-weight:700}
+.btn.secondary{background:transparent;color:var(--ink)}
+.section-title{margin:24px 0 8px;font-size:14px;color:var(--muted)}
+hr{border:none;height:1px;background:rgba(255,255,255,.08);margin:14px 0}
+.note{font-size:12px;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 12px}
 </style>
 </head>
-
 <body>
 <header>
-  <img class="logo" src="assets/logo.png" alt="lhdigital">
-  <h1>lhdigital — Catálogo de Etiquetas <span class="badge" id="badgeAdmin" style="display:none">Admin</span></h1>
-  <p class="muted">Escolha um modelo e clique em <strong>Modelo P</strong> (40×10 mm) ou <strong>Modelo G</strong> (75×40 mm) para abrir no simulador.</p>
-
+  <h1>Catálogo de Etiquetas — 2026</h1>
+  <p class="note">Use os filtros abaixo para explorar. Clique em “Ver no simulador” para abrir o modelo já selecionado. As imagens exibem uma prévia; os tamanhos de fonte e imagem podem ser ajustados na versão final.</p>
   <div class="controls">
-    <input id="busca" type="text" placeholder="Buscar por nome, tag, personagem…">
-    <select id="filtroSecao">
-      <option value="todas">Todas as seções</option>
+      <select id="catSelect" aria-label="Filtrar por categoria">
+      <option value="">Categoria: Todas</option>
+      <option>Desenhos & Séries</option>
+      <option>Super-heróis</option>
+      <option>Jogos</option>
+      <option>Times</option>
+      <option>Carros & Veículos</option>
+      <option>Fofo/Cute</option>
+      <option>Neutros</option>
     </select>
-  </div>
-
-  <div class="header-actions">
-    <a class="btn" href="assets/catalogo.pdf" target="_blank" rel="noopener">Baixar catálogo (PDF)</a>
-    <a class="btn secondary" href="simulador.html" target="_blank" rel="noopener">Abrir simulador</a>
+    <select id="tierSelect" aria-label="Filtrar por prioridade">
+      <option value="">Prioridade: Todas</option>
+      <option>Tier A</option>
+      <option>Tier B</option>
+      <option>Tier C</option>
+    </select>
+    <input id="q" type="search" placeholder="Buscar por nome/tema…" aria-label="Buscar">
   </div>
 </header>
 
-<main id="wrap"></main>
-
-<footer>© lhdigital — catálogo online</footer>
+<main>
+  <div id="list" class="grid" aria-live="polite"></div>
+</main>
 
 <script>
-/* ====== CONFIG ====== */
-const SIMULADOR_URL = 'simulador.html'; // ajuste se o arquivo tiver outro nome/pasta
+// CONFIG
+const WHATSAPP_NUMBER = '5551993745430';
+const SIMULADOR_URL = './index.html';
 
-/* ====== DADOS (pode ser trocado por fetch de assets/catalogo.json) ====== */
-const SECOES = [
-  { id:'pre',       titulo:'Pré-escolar (2–6)' },
-  { id:'fundamental', titulo:'Fundamental I (6–10)' },
-  { id:'tweens',    titulo:'Tweens (9–12)' },
-  { id:'neutros',   titulo:'Neutros que convertem sempre' },
+// DATA — mapeado para segmentos/tier/tags segundo o guia.
+const ITEMS = [
+  // Desenhos & Séries
+  I('bluey','Bluey','bluey.png','Desenhos & Séries','Tier A',['azul','família']),
+  I('peppa','Peppa','peppa.png','Desenhos & Séries','Tier A',['infantil']),
+  I('gabbys','Gabby’s Dollhouse','gabbys.png','Desenhos & Séries','Tier B',['lilás']),
+  I('frozen','Frozen','frozen.png','Desenhos & Séries','Tier B',['aquarela','azul']),
+  I('moana','Moana','moana.png','Desenhos & Séries','Tier B',['tropical']),
+  I('ladybug','Ladybug','ladybug.png','Desenhos & Séries','Tier B',['vermelho','bolinhas']),
+  I('stitch','Stitch','stitch.png','Desenhos & Séries','Tier B',['kawaii']),
+  I('stitch-angel','Stitch & Angel','stitch-angel.png','Desenhos & Séries','Tier B',['kawaii']),
+
+  // Super-heróis
+  I('homem-aranha','Homem-Aranha','homem-aranha.png','Super-heróis','Tier A',['hq','vermelho']),
+  I('homem-aranha2','Homem-Aranha (var.)','homem-aranha2.png','Super-heróis','Tier A',['hq']),
+  I('homem-ferro','Homem de Ferro','homem-ferro.png','Super-heróis','Tier A',['vingadores','vermelho']),
+  I('hulk','Hulk','hulk.png','Super-heróis','Tier A',['vingadores','verde']),
+  I('capitao-america','Capitão América','capitao-america.png','Super-heróis','Tier A',['vingadores','azul']),
+
+  // Jogos
+  I('minecraft','Minecraft','minecraft.png','Jogos','Tier A',['pixel']),
+  I('roblox','Roblox','roblox.png','Jogos','Tier A',['avatar']),
+  I('sonic2','Sonic','sonic2.png','Jogos','Tier A',['velocidade','anéis']),
+  I('mario','Super Mario','mario.png','Jogos','Tier A',['clássico']),
+  I('luigi','Luigi','luigi.png','Jogos','Tier A',['clássico']),
+
+  // Pokémon
+  I('pikachu','Pikachu','pikachu.png','Jogos','Tier A',['pokemon','amarelo']),
+  I('bulbasaur','Bulbasaur','bulbasaur.png','Jogos','Tier A',['pokemon','verde']),
+  I('squirtle','Squirtle','squirtle.png','Jogos','Tier A',['pokemon','azul']),
+  I('charmander','Charmander','charmander.png','Jogos','Tier A',['pokemon','laranja']),
+  I('eevee','Eevee','eevee.png','Jogos','Tier A',['pokemon','marrom']),
+
+  // Times
+  I('gremio','Grêmio','gremio.png','Times','Tier A',['futebol','azul']),
+  I('inter','Inter','inter.png','Times','Tier A',['futebol','vermelho']),
+
+  // Carros & Veículos
+  I('mcqueen','McQueen','mcqueen.png','Carros & Veículos','Tier A',['corrida']),
+  I('carro-azul','Carro Azul','carro-azul.png','Carros & Veículos','Tier A',['esportivo']),
+  I('carro-laranja','Carro Laranja','carro-laranja.png','Carros & Veículos','Tier A',['muscle']),
+
+  // Fofo/Cute (clássicos)
+  I('minnie','Minnie','minnie.png','Fofo/Cute','Tier A',['poás','rosa']),
+  I('mickey','Mickey','mickey.png','Fofo/Cute','Tier A',['clássico']),
+  I('hello-kitty','Hello Kitty','hello-kitty.png','Fofo/Cute','Tier B',['candy']),
+
+  // Neutros
+  I('unicornio','Unicórnio','unicornio.png','Neutros','Tier C',['pastel']),
+  I('unicornio2','Unicórnio 2','unicornio2.png','Neutros','Tier C',['pastel']),
+  I('capivara','Capivara Fofa','capivara.png','Neutros','Tier A',['meme','brasil']),
+  I('cowboy','Cowboy','cowboy.png','Neutros','Tier B',['temático'])
 ];
 
-// itens de exemplo (troque imagens por suas artes em assets/personagens/<id>.png)
-let ITENS = [
-  { id:'bluey',  nome:'Bluey',               secao:'pre',         tags:['fofo','disney?'], img:'assets/personagens/bluey.png' },
-  { id:'skye',   nome:'Patrulha Canina — Skye', secao:'pre',      tags:['rosa','cachorro'], img:'assets/personagens/skye.png' },
-  { id:'chase',  nome:'Patrulha Canina — Chase', secao:'pre',     tags:['azul'], img:'assets/personagens/chase.png' },
-  { id:'peppa',  nome:'Peppa Pig',           secao:'pre',         tags:['porquinha'], img:'assets/personagens/peppa.png' },
+function I(id,nome,arquivo,segmento,tier,tags=[]){return{ id,nome,arquivo,segmento,tier,tags }}
 
-  { id:'spider', nome:'Homem-Aranha',        secao:'fundamental', tags:['herói','marvel'], img:'assets/personagens/spider.png' },
-  { id:'miles',  nome:'Spider-Man — Miles',  secao:'fundamental', tags:['neon','marvel'], img:'assets/personagens/miles.png' },
-  { id:'sonic',  nome:'Sonic',               secao:'fundamental', tags:['jogo','retro'], img:'assets/personagens/sonic.png' },
-  { id:'mario',  nome:'Super Mario',         secao:'fundamental', tags:['nintendo'], img:'assets/personagens/mario.png' },
-  { id:'minecraft', nome:'Minecraft',        secao:'fundamental', tags:['pixel','gamer'], img:'assets/personagens/minecraft.png' },
-  { id:'pokemon',   nome:'Pokémon',          secao:'fundamental', tags:['pikachu'], img:'assets/personagens/pokemon.png' },
-  { id:'hotwheels', nome:'Carros / Hot Wheels', secao:'fundamental', tags:['corrida'], img:'assets/personagens/hotwheels.png' },
-  { id:'stitch', nome:'Stitch & Angel',      secao:'fundamental', tags:['kawaii'], img:'assets/personagens/stitch.png' },
+const listEl = document.getElementById('list');
+const segSel = document.getElementById('catSelect');
+const tierSel = document.getElementById('tierSelect');
+const q = document.getElementById('q');
 
-  { id:'futebol', nome:'Times de Futebol',   secao:'tweens',      tags:['copa','escudos'], img:'assets/personagens/futebol.png' },
-  { id:'anime',   nome:'Anime (Naruto/DB/OP/DS)', secao:'tweens', tags:['otaku'], img:'assets/personagens/anime.png' },
-  { id:'wandinha',nome:'Wednesday (Wandinha)', secao:'tweens',    tags:['preto e roxo'], img:'assets/personagens/wandinha.png' },
-
-  { id:'dinos',   nome:'Dinossauros',        secao:'neutros',     tags:['não licenciado'], img:'assets/personagens/dinos.png' },
-  { id:'espaco',  nome:'Espaço / Astronauta',secao:'neutros',     tags:['galáxia'], img:'assets/personagens/espaco.png' },
-  { id:'gamer',   nome:'Gamer / Controle',   secao:'neutros',     tags:['neon'], img:'assets/personagens/gamer.png' },
-  { id:'capivara',nome:'Capivara Fofa',      secao:'neutros',     tags:['meme BR'], img:'assets/personagens/capivara.png' },
-];
-
-/* carrega possíveis itens salvos via admin (localStorage) */
-const SAVED = JSON.parse(localStorage.getItem('lhd_catalogo_extra')||'[]');
-if (SAVED.length) ITENS = [...ITENS, ...SAVED];
-
-/* ====== UI RENDER ====== */
-const wrap = document.getElementById('wrap');
-const busca = document.getElementById('busca');
-const filtroSecao = document.getElementById('filtroSecao');
-
-function slugify(s){
-  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
-}
-
-/* popular filtro de seção */
-function preencherFiltro(){
-  SECOES.forEach(s=>{
-    const opt=document.createElement('option');
-    opt.value = s.id; opt.textContent = s.titulo;
-    filtroSecao.appendChild(opt);
-  });
-}
-
-/* card HTML */
-function cardHTML(it){
-  const urlP = `${SIMULADOR_URL}?tema=${encodeURIComponent(it.id)}&papelaria=1&size=P`;
-  const urlG = `${SIMULADOR_URL}?tema=${encodeURIComponent(it.id)}&papelaria=1&size=G`;
-  const tags = (it.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
-  return `
-  <article class="card" data-id="${it.id}" data-secao="${it.secao}">
-    <div class="thumb">
-      <img src="${it.img||'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27300%27 height=%27220%27%3E%3Crect width=%27100%25%27 height=%27100%25%27 rx=%2716%27 ry=%2716%27 fill=%270c0f1c%27/%3E%3C/svg%3E'}" alt="${it.nome}">
-    </div>
-    <div class="body">
-      <h3>${it.nome}</h3>
-      <div class="tags">${tags}</div>
-      <div class="actions">
-        <a class="btn small" href="${urlP}" target="_blank" rel="noopener">Modelo P</a>
-        <a class="btn small secondary" href="${urlG}" target="_blank" rel="noopener">Modelo G</a>
-      </div>
-      <span class="muted">ID: <code>${it.id}</code> • Seção: ${it.secao}</span>
-    </div>
-  </article>`;
-}
-
-/* desenhar seções com filtros aplicados */
 function render(){
-  const q = (busca.value||'').trim().toLowerCase();
-  const sec = filtroSecao.value;
+  const seg = segSel.value; const tier = tierSel.value; const term = q.value.toLowerCase().trim();
+  const data = ITEMS.filter(it=>
+    (!seg || it.categoria===seg) && (!tier || it.tier===tier) &&
+    (!term || it.nome.toLowerCase().includes(term) || it.tags.some(t=>t.includes(term)))
+  );
 
-  wrap.innerHTML = '';
-  SECOES.forEach(secao=>{
-    // filtra
-    const lista = ITENS.filter(it => it.secao===secao.id)
-      .filter(it => sec==='todas' || sec===secao.id)
-      .filter(it => q==='' || (it.nome.toLowerCase().includes(q) || (it.tags||[]).join(' ').toLowerCase().includes(q) || it.id.toLowerCase().includes(q)));
-
-    if(!lista.length) return;
-
-    const section = document.createElement('section');
-    section.className = 'section';
-    section.id = 'sec_'+secao.id;
-    section.innerHTML = `<h2>${secao.titulo}</h2><div class="grid">${lista.map(cardHTML).join('')}</div>`;
-    wrap.appendChild(section);
-  });
+  listEl.innerHTML = '';
+  data.forEach(it=> listEl.appendChild(card(it)));
+  if(!data.length){ listEl.innerHTML = `<p class="note">Nenhum item encontrado com os filtros atuais.</p>` }
 }
 
-/* ====== ADMIN (por URL) ====== */
-const qs = new URLSearchParams(location.search);
-const isAdmin = qs.has('admin') && qs.get('admin')!=='0';
-if (isAdmin) document.getElementById('badgeAdmin').style.display='inline-flex';
-
-function adminUI(){
-  if(!isAdmin) return;
-  const bar = document.createElement('div');
-  bar.className='admin-bar';
-  bar.innerHTML = `
-    <div class="admin">
-      <strong>Modo Admin</strong> — use para cadastrar novos modelos (salva localmente para testes).
-      <div class="grid2">
-        <div>
-          <label>Nome do modelo</label>
-          <input id="ad_nome" type="text" placeholder="Ex.: Super Mario — Fire">
-        </div>
-        <div>
-          <label>ID (slug único)</label>
-          <input id="ad_id" type="text" placeholder="ex.: mario-fire">
-        </div>
-        <div>
-          <label>Seção</label>
-          <select id="ad_secao">${SECOES.map(s=>`<option value="${s.id}">${s.titulo}</option>`).join('')}</select>
-        </div>
-        <div>
-          <label>Tags (separe por vírgula)</label>
-          <input id="ad_tags" type="text" placeholder="neon, gamer, azul">
-        </div>
-        <div>
-          <label>Imagem (PNG/JPG/WebP) — ficará em <code>assets/personagens/</code></label>
-          <input id="ad_img" type="file" accept="image/*">
-        </div>
-        <div class="preview-mini">
-          <img id="ad_preview" alt="Prévia">
-          <div class="muted">Prévia da imagem</div>
-        </div>
-      </div>
-      <div class="actions" style="margin-top:6px">
-        <button id="ad_add" class="btn small">Adicionar ao catálogo (local)</button>
-        <button id="ad_export" class="btn small secondary">Baixar catalogo.json</button>
-        <button id="ad_clear" class="btn small secondary">Limpar itens locais</button>
-      </div>
-      <div class="muted">Dica: gere o <kbd>catalogo.json</kbd>, suba as imagens em <kbd>assets/personagens/</kbd> e faça commit.</div>
+function card(it){
+  const el = document.createElement('article'); el.className='card';
+  el.innerHTML = `
+    <div class="thumb"><img alt="${it.nome}" src="assets/etiquetas/${it.id}_preview.png" loading="lazy"></div>
+    <div class="title">${it.nome}</div>
+    <div class="badges">
+      <span class="badge">${it.categoria}</span>
+      <span class="badge">${it.tier}</span>
+      ${it.tags.map(t=>`<span class="badge">${t}</span>`).join('')}
     </div>
-  `;
-  document.body.insertBefore(bar, document.querySelector('main'));
-  // preview da imagem
-  const file = bar.querySelector('#ad_img');
-  const preview = bar.querySelector('#ad_preview');
-  file.addEventListener('change', ()=>{
-    const f = file.files[0];
-    if(!f) return preview.src='';
-    const r = new FileReader();
-    r.onload = ()=> preview.src = r.result;
-    r.readAsDataURL(f);
-  });
-
-  bar.querySelector('#ad_add').addEventListener('click', ()=>{
-    const nome = bar.querySelector('#ad_nome').value.trim();
-    let id = bar.querySelector('#ad_id').value.trim();
-    const secao = bar.querySelector('#ad_secao').value;
-    const tags = bar.querySelector('#ad_tags').value.split(',').map(s=>s.trim()).filter(Boolean);
-    if(!nome) return alert('Preencha o nome.');
-    if(!id) id = slugify(nome);
-    const img = file.files[0];
-    if(!img) return alert('Selecione uma imagem.');
-    // salva como dataURL local (para testar já funciona). Quando for publicar, troque por caminho assets/personagens/<id>.png
-    const reader = new FileReader();
-    reader.onload = ()=>{
-      const novo = { id, nome, secao, tags, img: reader.result };
-      ITENS.push(novo);
-      // guardar só a referência da imagem como caminho final sugerido
-      const toSave = { id, nome, secao, tags, img: `assets/personagens/${id}.png` };
-      const extra = JSON.parse(localStorage.getItem('lhd_catalogo_extra')||'[]');
-      extra.push(toSave);
-      localStorage.setItem('lhd_catalogo_extra', JSON.stringify(extra));
-      render();
-      alert('Adicionado (local). Para publicar, exporte o JSON e suba a imagem em assets/personagens/.');
-    };
-    reader.readAsDataURL(img);
-  });
-
-  bar.querySelector('#ad_export').addEventListener('click', ()=>{
-    const payload = { secoes: SECOES, itens: ITENS.map(it=> ({...it, img: it.img.startsWith('data:') ? `assets/personagens/${it.id}.png` : it.img })) };
-    const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'catalogo.json';
-    a.click();
-  });
-
-  bar.querySelector('#ad_clear').addEventListener('click', ()=>{
-    if(confirm('Remover itens locais adicionados?')){
-      localStorage.removeItem('lhd_catalogo_extra');
-      location.reload();
-    }
-  });
+    <div class="actions">
+      <a class="btn" href="${SIMULADOR_URL}?personagem=${encodeURIComponent(it.id)}" target="_blank" rel="noopener">Ver no simulador</a>
+      <a class="btn secondary" href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Quero etiquetas do tema: '+it.nome)}" target="_blank" rel="noopener">Pedir no Whats</a>
+    </div>`;
+  return el;
 }
 
-/* ====== INIT ====== */
-preencherFiltro();
-busca.addEventListener('input', render);
-filtroSecao.addEventListener('change', render);
-adminUI();
-render();
-
-/* abrir seção vinda por URL: ?section=fundamental */
-const secParam = (new URLSearchParams(location.search)).get('section');
-if (secParam){
-  const el = document.getElementById('sec_'+secParam);
-  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
-}
+segSel.addEventListener('change', render);
+ tierSel.addEventListener('change', render);
+ q.addEventListener('input', render);
+ render();
 </script>
 </body>
 </html>

@@ -49,6 +49,17 @@
     .preview-grid{grid-template-columns:1fr}
   }
 
+  .preview-hint{
+    margin-top:12px;
+    font-size:13px;
+    color:var(--muted);
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;
+    padding:10px 12px;
+    text-align:center;
+  }
+
   /* Galeria com limite e scroll */
   .gallery-wrap{margin-top:8px}
   .gallery{display:grid;gap:10px;grid-template-columns:repeat(6,1fr);max-height:240px;overflow:auto;padding:4px}
@@ -83,7 +94,7 @@
   <h1>lhdigital — Simulador de Etiquetas</h1>
   <p>Pré-visualize as etiquetas <strong>P (40×10 mm)</strong> e <strong>G (75×40 mm)</strong>, escolha personagem e cor única (texto+borda) e envie o pedido no WhatsApp.</p>
   <div class="header-actions">
-    <a class="btn" href="assets/catalogo.pdf" target="_blank" rel="noopener" aria-label="Abrir catálogo em PDF">Ver catálogo (PDF)</a>
+    <a class="btn" href="catalogo.html" target="_blank" rel="noopener">Ver catálogo</a>
     <a class="btn secondary" href="#duvidas">Dúvidas & cuidados</a>
   </div>
 </header>
@@ -102,6 +113,11 @@
       <div>
         <p class="tag">Modelo G (75×40 mm)</p>
         <canvas id="canvasG" width="750" height="400" aria-label="Prévia etiqueta G"></canvas>
+      </div>
+      <div class="preview-hint" role="note">
+        Os tamanhos da fonte e da imagem poderão ser ajustados na versão final,
+        além de ser possível reposicioná-los. Para outras personalizações,
+        entre em contato pelo WhatsApp.
       </div>
     </div>
   </section>
@@ -172,14 +188,54 @@
 /* ====== CONFIG ====== */
 // const WHATSAPP_NUMBER = '5551993745430'; // (55 + DDD + número)
 let WHATSAPP_NUMBER = '5551993745430';  // (55 + DDD + número)
-const CATALOG_URL = 'assets/catalogo.pdf';
+const CATALOG_URL = '/catalogo';
 
 /* Lista de personagens — padrão "Nenhum" (sem imagem) */
 const CHAR_LIST = [
   { id:"nenhum", nome:"Nenhum", arquivo:null },
-  { id:"skye",  nome:"Skye",        arquivo:"skye.png" },
-  { id:"sonic", nome:"Sonic",       arquivo:"sonic.png" },
+  { id:"moana", nome:"Moana", arquivo:"moana.png" },
+  { id:"frozen", nome:"Frozen (Elsa)", arquivo:"frozen.png" },
+  { id:"ladybug", nome:"Ladybug", arquivo:"ladybug.png" },
+  { id:"mcqueen", nome:"McQueen", arquivo:"mcqueen.png" },
+  { id:"eevee", nome:"Eevee", arquivo:"eevee.png" },
+  { id:"bulbasaur", nome:"Bulbasaur", arquivo:"bulbasaur.png" },
+  { id:"squirtle", nome:"Squirtle", arquivo:"squirtle.png" },
+  { id:"charmander", nome:"Charmander", arquivo:"charmander.png" },
+  { id:"pikachu", nome:"Pikachu", arquivo:"pikachu.png" },
+  { id:"minecraft", nome:"Minecraft", arquivo:"minecraft.png" },
+  { id:"luigi", nome:"Luigi", arquivo:"luigi.png" },
   { id:"mario", nome:"Super Mario", arquivo:"mario.png" },
+  { id:"sonic2", nome:"Sonic", arquivo:"sonic2.png" },
+  { id:"hulk", nome:"Hulk", arquivo:"hulk.png" },
+  { id:"capitao-america", nome:"Capitão América", arquivo:"capitao-america.png" },
+  { id:"homem-ferro", nome:"Homem de Ferro", arquivo:"homem-ferro.png" },
+  { id:"homem-aranha", nome:"Homem-Aranha", arquivo:"homem-aranha.png" },
+  { id:"galinha-pintadinha", nome:"Galinha Pintadinha", arquivo:"galinha-pintadinha.png" },
+  { id:"baby-shark", nome:"Baby Shark", arquivo:"baby-shark.png" },
+  { id:"gabbys", nome:"Gabby’s Dollhouse", arquivo:"gabbys.png" },
+  { id:"hello-kitty", nome:"Hello Kitty", arquivo:"hello-kitty.png" },
+  { id:"mickey-rosto", nome:"Mickey (rosto)", arquivo:"mickey-rosto.png" },
+  { id:"minnie-rosto", nome:"Minnie (rosto)", arquivo:"minnie-rosto.png" },
+  { id:"mickey", nome:"Mickey", arquivo:"mickey.png" },
+  { id:"minnie", nome:"Minnie", arquivo:"minnie.png" },
+  { id:"peppa", nome:"Peppa", arquivo:"peppa.png" },
+  { id:"marshal", nome:"Marshall (Patrulha Canina)", arquivo:"marshal.png" },
+  { id:"skye2", nome:"Skye (Patrulha Canina)", arquivo:"skye2.png" },
+  { id:"bluey", nome:"Bluey", arquivo:"bluey.png" },
+  { id:"stitch", nome:"Stitch", arquivo:"stitch.png" },
+  { id:"capivara", nome:"Capivara", arquivo:"capivara.png" },
+  { id:"unicornio", nome:"Unicórnio", arquivo:"unicornio.png" },
+  { id:"stitch-angel", nome:"Stitch e Angel", arquivo:"stitch-angel.png" },
+  { id:"homem-aranha2", nome:"Homem-Aranha (variante)", arquivo:"homem-aranha2.png" },
+  { id:"hulk-baby", nome:"Hulk Baby", arquivo:"hulk-baby.png" },
+  { id:"carro-azul", nome:"Carro Azul", arquivo:"carro-azul.png" },
+  { id:"carro-laranja", nome:"Carro Laranja", arquivo:"carro-laranja.png" },
+  { id:"princesa-sofia", nome:"Princesa Sofia", arquivo:"princesa-sofia.png" },
+  { id:"gremio", nome:"Grêmio", arquivo:"gremio.png" },
+  { id:"inter", nome:"Inter", arquivo:"inter.png" },
+  { id:"unicornio2", nome:"Unicórnio 2", arquivo:"unicornio2.png" },
+  { id:"cowboy", nome:"Cowboy", arquivo:"cowboy.png" },
+  { id:"roblox", nome:"Roblox", arquivo:"roblox.png" }
 ];
 
 /* tamanhos em px (10 px/mm) */
@@ -201,6 +257,7 @@ const galeria = el('galeria');
 
 // --- NOVO: controles via URL para parceiros ---
 const qs = new URLSearchParams(location.search);
+const personaId = qs.get('personagem');
 
 // esconder botão do Whats quando for uso em papelaria
 const modoPapelaria = qs.has('papelaria') || qs.get('hidewhats') === '1';
@@ -397,6 +454,13 @@ btnReset.addEventListener('click', ()=>{
 
 /* init */
 montarGaleria();
+
+// aplica o personagem vindo do catálogo (se houver), após a galeria existir
+if (personaId) {
+  const btn = document.querySelector(`.card-img[data-id="${CSS.escape(personaId)}"]`);
+  if (btn) btn.click();
+}
+
 renderAll();
 </script>
 </body>
