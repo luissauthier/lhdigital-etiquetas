@@ -643,3 +643,63 @@ if (!personaId) renderAll();
 </script>
 </body>
 </html>
+alue = nome.value;
+  wrapNomeG.style.display = 'none';
+
+  document.querySelector('.card-img[data-id="nenhum"]')?.click();
+  renderAll();
+});
+
+
+/* eventos */
+[nome, nomeG, corUnica, cartela].forEach(i=>{
+  i.addEventListener('input', renderAll);
+  i.addEventListener('change', renderAll);
+});
+
+/* init */
+montarGaleria();
+
+if (personaId) {
+  const btn = document.querySelector(`.card-img[data-id="${CSS.escape(personaId)}"]`);
+  if (btn) btn.click();
+}
+
+// por último, aplica cor do parâmetro (se veio) e respeita "Fixar cor"
+aplicarCorSePermitido(corParam);
+
+if (!personaId) renderAll();
+
+</script>
+</body>
+</html>
+alue = nome.value;
+  wrapNomeG.style.display = 'none';
+
+  document.querySelector('.card-img[data-id="nenhum"]')?.click();
+  renderAll();
+});
+
+
+/* eventos */
+[nome, nomeG, corUnica, cartela].forEach(i=>{
+  i.addEventListener('input', renderAll);
+  i.addEventListener('change', renderAll);
+});
+
+/* init */
+montarGaleria();
+
+if (personaId) {
+  const btn = document.querySelector(`.card-img[data-id="${CSS.escape(personaId)}"]`);
+  if (btn) btn.click();
+}
+
+// por último, aplica cor do parâmetro (se veio) e respeita "Fixar cor"
+aplicarCorSePermitido(corParam);
+
+if (!personaId) renderAll();
+
+</script>
+</body>
+</html>
