@@ -91,64 +91,66 @@ if (back) back.href = SIMULADOR_URL + (passParams.toString() ? `?${passParams}` 
 // DATA — mapeado para segmentos/tier/tags segundo o guia.
 const ITEMS = [
   // Desenhos & Séries
-  I('bluey','Bluey','bluey.png','Desenhos & Séries','Tier A',['azul','família']),
-  I('chase','Chase','chase.png','Desenhos & Séries','Tier A',['infantil', 'patrulha']),
-  I('skye','Skye','skye.png','Desenhos & Séries','Tier A',['infantil', 'patrulha']),
-  I('skye2','Skye (variante)','skye2.png','Desenhos & Séries','Tier A',['infantil', 'patrulha']),
-  I('marshal','Marshal','marshal.png','Desenhos & Séries','Tier A',['infantil', 'patrulha']),
-  I('peppa','Peppa','peppa.png','Desenhos & Séries','Tier A',['infantil']),
-  I('gabbys','Gabby’s Dollhouse','gabbys.png','Desenhos & Séries','Tier B',['lilás']),
-  I('frozen','Frozen','frozen.png','Desenhos & Séries','Tier B',['aquarela','azul']),
-  I('moana','Moana','moana.png','Desenhos & Séries','Tier B',['tropical']),
-  I('barbie','Barbie','barbie.png','Desenhos & Séries','Tier B',['rosa']),
-  I('ladybug','Ladybug','ladybug.png','Desenhos & Séries','Tier B',['vermelho','bolinhas']),
-  I('stitch','Stitch','stitch.png','Desenhos & Séries','Tier B',['kawaii']),
-  I('stitch-angel','Stitch & Angel','stitch-angel.png','Desenhos & Séries','Tier B',['kawaii']),
+  I('bluey','Bluey','bluey.png','Desenhos & Séries','Tier A',['azul','família'],'#92C6EB'),
+  I('chase','Chase','chase.png','Desenhos & Séries','Tier A',['infantil', 'patrulha'],'#1B2B4E'),
+  I('skye','Skye','skye.png','Desenhos & Séries','Tier A',['infantil', 'patrulha'],'#EC5986'),
+  I('skye2','Skye (variante)','skye2.png','Desenhos & Séries','Tier A',['infantil', 'patrulha'],'#EC5986'),
+  I('marshal','Marshal','marshal.png','Desenhos & Séries','Tier A',['infantil', 'patrulha'], '#E5050F'),
+  I('peppa','Peppa','peppa.png','Desenhos & Séries','Tier A',['infantil'],'#FFB0DF'),
+  I('gabbys','Gabby’s Dollhouse','gabbys.png','Desenhos & Séries','Tier B',['lilás'],'#A600E2'),
+  I('frozen','Frozen','frozen.png','Desenhos & Séries','Tier B',['aquarela','azul'],'#6ED3E0'),
+  I('moana','Moana','moana.png','Desenhos & Séries','Tier B',['tropical'],'#D63A2E'),
+  I('barbie','Barbie','barbie.png','Desenhos & Séries','Tier B',['rosa'],'#E240A3'),
+  I('ladybug','Ladybug','ladybug.png','Desenhos & Séries','Tier B',['vermelho','bolinhas'],'#E5050F'),
+  I('stitch','Stitch','stitch.png','Desenhos & Séries','Tier B',['kawaii'],'#4A7BB5'),
+  I('stitch-angel','Stitch & Angel','stitch-angel.png','Desenhos & Séries','Tier B',['kawaii'],'#E39EC7'),
 
   // Super-heróis
-  I('homem-aranha','Homem-Aranha','homem-aranha.png','Super-heróis','Tier A',['hq','vermelho']),
-  I('homem-aranha2','Homem-Aranha (var.)','homem-aranha2.png','Super-heróis','Tier A',['hq']),
-  I('homem-ferro','Homem de Ferro','homem-ferro.png','Super-heróis','Tier A',['vingadores','vermelho']),
-  I('hulk','Hulk','hulk.png','Super-heróis','Tier A',['vingadores','verde']),
-  I('capitao-america','Capitão América','capitao-america.png','Super-heróis','Tier A',['vingadores','azul']),
+  I('homem-aranha','Homem-Aranha','homem-aranha.png','Super-heróis','Tier A',['hq','vermelho'],'#E5050F'),
+  I('homem-aranha2','Homem-Aranha (var.)','homem-aranha2.png','Super-heróis','Tier A',['hq'],'#CF2A20'),
+  I('homem-ferro','Homem de Ferro','homem-ferro.png','Super-heróis','Tier A',['vingadores','vermelho'],'#E5050F'),
+  I('hulk','Hulk','hulk.png','Super-heróis','Tier A',['vingadores','verde'],'#5C8F4C'),
+  I('capitao-america','Capitão América','capitao-america.png','Super-heróis','Tier A',['vingadores','azul'],'#0D80BF'),
 
   // Jogos
-  I('minecraft','Minecraft','minecraft.png','Jogos','Tier A',['pixel']),
-  I('roblox','Roblox','roblox.png','Jogos','Tier A',['avatar']),
-  I('sonic','Sonic','sonic.png','Jogos','Tier A',['velocidade','anéis']),
-  I('sonic2','Sonic (variante)','sonic2.png','Jogos','Tier A',['velocidade','anéis']),
-  I('mario','Super Mario','mario.png','Jogos','Tier A',['clássico']),
-  I('luigi','Luigi','luigi.png','Jogos','Tier A',['clássico']),
+  I('minecraft','Minecraft','minecraft.png','Jogos','Tier A',['pixel'],'#4DAC22'),
+  I('roblox','Roblox','roblox.png','Jogos','Tier A',['avatar'],'#E5050F'),
+  I('sonic','Sonic','sonic.png','Jogos','Tier A',['velocidade','anéis'],'#14489F'),
+  I('sonic2','Sonic (variante)','sonic2.png','Jogos','Tier A',['velocidade','anéis'],'#3C6DFB'),
+  I('mario','Super Mario','mario.png','Jogos','Tier A',['clássico'],'#E5050F'),
+  I('luigi','Luigi','luigi.png','Jogos','Tier A',['clássico'],'#4DAC22'),
 
   // Pokémon
-  I('pikachu','Pikachu','pikachu.png','Jogos','Tier A',['pokemon','amarelo']),
-  I('bulbasaur','Bulbasaur','bulbasaur.png','Jogos','Tier A',['pokemon','verde']),
-  I('squirtle','Squirtle','squirtle.png','Jogos','Tier A',['pokemon','azul']),
-  I('charmander','Charmander','charmander.png','Jogos','Tier A',['pokemon','laranja']),
-  I('eevee','Eevee','eevee.png','Jogos','Tier A',['pokemon','marrom']),
+  I('pikachu','Pikachu','pikachu.png','Jogos','Tier A',['pokemon','amarelo'],'#FAD61E'),
+  I('bulbasaur','Bulbasaur','bulbasaur.png','Jogos','Tier A',['pokemon','verde'],'#79A75B'),
+  I('squirtle','Squirtle','squirtle.png','Jogos','Tier A',['pokemon','azul'],'#52A3A9'),
+  I('charmander','Charmander','charmander.png','Jogos','Tier A',['pokemon','laranja'],'#F47932'),
+  I('eevee','Eevee','eevee.png','Jogos','Tier A',['pokemon','marrom'],'#BD8946'),
 
   // Times
-  I('gremio','Grêmio','gremio.png','Times','Tier A',['futebol','azul']),
-  I('inter','Inter','inter.png','Times','Tier A',['futebol','vermelho']),
+  I('gremio','Grêmio','gremio.png','Times','Tier A',['futebol','azul'],'#0D80BF'),
+  I('inter','Inter','inter.png','Times','Tier A',['futebol','vermelho'],'#E5050F'),
 
   // Carros & Veículos
-  I('mcqueen','McQueen','mcqueen.png','Carros & Veículos','Tier A',['corrida']),
-  I('carro-azul','Carro Azul','carro-azul.png','Carros & Veículos','Tier A',['esportivo']),
-  I('carro-laranja','Carro Laranja','carro-laranja.png','Carros & Veículos','Tier A',['muscle']),
+  I('mcqueen','McQueen','mcqueen.png','Carros & Veículos','Tier A',['corrida'],'#E5050F'),
+  I('carro-azul','Carro Azul','carro-azul.png','Carros & Veículos','Tier A',['esportivo'],'#2A7CD3'),
+  I('carro-laranja','Carro Laranja','carro-laranja.png','Carros & Veículos','Tier A',['muscle'],'#F58634'),
 
   // Fofo/Cute (clássicos)
-  I('minnie','Minnie','minnie.png','Fofo/Cute','Tier A',['poás','rosa']),
-  I('mickey','Mickey','mickey.png','Fofo/Cute','Tier A',['clássico']),
-  I('hello-kitty','Hello Kitty','hello-kitty.png','Fofo/Cute','Tier B',['candy']),
+  I('minnie','Minnie','minnie.png','Fofo/Cute','Tier A',['poás','rosa'],'#E5050F'),
+  I('mickey','Mickey','mickey.png','Fofo/Cute','Tier A',['clássico'],'#E5050F'),
+  I('hello-kitty','Hello Kitty','hello-kitty.png','Fofo/Cute','Tier B',['candy'],'#EE3E41'),
 
   // Neutros
-  I('unicornio','Unicórnio','unicornio.png','Neutros','Tier C',['pastel']),
-  I('unicornio2','Unicórnio 2','unicornio2.png','Neutros','Tier C',['pastel']),
-  I('capivara','Capivara Fofa','capivara.png','Neutros','Tier A',['meme','brasil']),
-  I('cowboy','Cowboy','cowboy.png','Neutros','Tier B',['temático'])
+  I('unicornio','Unicórnio','unicornio.png','Neutros','Tier C',['pastel'],'#DFAFF6'),
+  I('unicornio2','Unicórnio 2','unicornio2.png','Neutros','Tier C',['pastel'],'#EC268F'),
+  I('capivara','Capivara Fofa','capivara.png','Neutros','Tier A',['meme','brasil'],'#F58634'),
+  I('cowboy','Cowboy','cowboy.png','Neutros','Tier B',['temático'],'#A96A23')
 ];
 
-function I(id,nome,arquivo,segmento,tier,tags=[]){return{ id,nome,arquivo,segmento,tier,tags }}
+function I(id,nome,arquivo,segmento,tier,tags=[],cor=null){
+  return { id,nome,arquivo,segmento,tier,tags,cor };
+}
 
 const listEl = document.getElementById('list');
 const segSel = document.getElementById('catSelect');
@@ -182,6 +184,7 @@ function card(it){
   // Monta link para o simulador preservando parâmetros + personagem
   const simQS = new URLSearchParams(passParams);
   simQS.set('personagem', it.id);
+  if (it.cor) simQS.set('cor', it.cor);
   const simHref = `${SIMULADOR_URL}?${simQS.toString()}`;
 
   // Link do Whats (mostra somente se não estiver em modo papelaria)
