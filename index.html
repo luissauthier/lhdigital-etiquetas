@@ -139,6 +139,29 @@
 
     <div class="row" style="margin-top:6px">
       <div style="grid-column:span 6;">
+        <label style="display:flex; align-items:center; gap:8px; white-space:normal;">
+          <input id="chkTextos" type="checkbox">
+          Textos diferentes (P e G)
+        </label>
+      </div>
+
+      <div style="grid-column:span 6;">
+        <label style="display:flex; align-items:center; gap:8px; white-space:normal;">
+          <input id="chkFixarCor" type="checkbox">
+          Fixar cor (não mudar ao trocar personagem)
+        </label>
+      </div>
+    </div>
+
+    <div id="wrapNomeG" class="row" style="margin-top:6px; display:none">
+      <div style="grid-column:span 12;">
+        <label for="nomeG">Texto da etiqueta G (75×40 mm)</label>
+        <input id="nomeG" type="text" placeholder="Ex.: João Medeiros da Silva" maxlength="60" value="João Medeiros da Silva">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:6px">
+      <div style="grid-column:span 6;">
         <label for="cartela">Cartela simulada</label>
         <select id="cartela" aria-label="Escolher tipo de cartela">
           <option value="A3 MIX">A3 MIX (120 P + 12 G)</option>
@@ -242,6 +265,63 @@ const CHAR_LIST = [
   { id:"roblox", nome:"Roblox", arquivo:"roblox.png" }
 ];
 
+// Cores sugeridas por personagem (mesmas do catálogo)
+const COLOR_MAP = {
+  bluey: '#92C6EB',
+  chase: '#1B2B4E',
+  skye: '#EC5986',
+  skye2: '#EC5986',
+  marshal: '#E5050F',
+  peppa: '#FFB0DF',
+  gabbys: '#A600E2',
+  frozen: '#6ED3E0',
+  moana: '#D63A2E',
+  barbie: '#E240A3',
+  ladybug: '#E5050F',
+  stitch: '#4A7BB5',
+  'stitch-angel': '#E39EC7',
+
+  'homem-aranha': '#E5050F',
+  'homem-aranha2': '#CF2A20',
+  'homem-ferro': '#E5050F',
+  hulk: '#5C8F4C',
+  'capitao-america': '#0D80BF',
+
+  minecraft: '#4DAC22',
+  roblox: '#E5050F',
+  sonic: '#14489F',
+  sonic2: '#3C6DFB',
+  mario: '#E5050F',
+  luigi: '#4DAC22',
+
+  pikachu: '#FAD61E',
+  bulbasaur: '#79A75B',
+  squirtle: '#52A3A9',
+  charmander: '#F47932',
+  eevee: '#BD8946',
+
+  gremio: '#0D80BF',
+  inter: '#E5050F',
+
+  mcqueen: '#E5050F',
+  'carro-azul': '#2A7CD3',
+  'carro-laranja': '#F58634',
+
+  minnie: '#E5050F',
+  mickey: '#E5050F',
+  'hello-kitty': '#EE3E41',
+
+  unicornio: '#DFAFF6',
+  unicornio2: '#EC268F',
+  capivara: '#F58634',
+  cowboy: '#A96A23'
+};
+
+// Injeta a cor sugerida no CHAR_LIST sem precisar duplicar manualmente
+CHAR_LIST.forEach(c => {
+  if (!c.cor && COLOR_MAP[c.id]) c.cor = COLOR_MAP[c.id];
+});
+
 /* tamanhos em px (10 px/mm) */
 const SIZE = {
   P: { w: 400, h: 100, imgMaxW: 60,  imgMaxH: 80,  pt: 12 }, // 40×10 mm
@@ -251,6 +331,11 @@ const SIZE = {
 const el = id => document.getElementById(id);
 const nome = el('nome');
 const corUnica = el('corUnica');
+const chkTextos = el('chkTextos');
+const wrapNomeG = el('wrapNomeG');
+const nomeG = el('nomeG');
+const chkFixarCor = el('chkFixarCor');
+
 const cartela = el('cartela');
 const canvasP = el('canvasP');
 const canvasG = el('canvasG');
@@ -262,6 +347,7 @@ const galeria = el('galeria');
 // --- NOVO: controles via URL para parceiros ---
 const qs = new URLSearchParams(location.search);
 const personaId = qs.get('personagem');
+const corParam = qs.get('cor');
 
 // esconder botão do Whats quando for uso em papelaria
 const modoPapelaria = qs.has('papelaria') || qs.get('hidewhats') === '1';
@@ -312,6 +398,7 @@ function montarGaleria(){
       wrap.classList.add('active');
       wrap.setAttribute('aria-pressed','true');
       personagemAtual = c;
+      aplicarCorDoPersonagem(c);
       if(c.arquivo) carregarImagem(c).then(renderAll); else renderAll();
     });
     galeria.appendChild(wrap);
@@ -412,18 +499,60 @@ function desenhar(canvas, opts){
   lines.forEach((ln,i)=> ctx.fillText(ln, tx, ty - totalH/2 + i*lineHeight + lineHeight/2) );
 }
 
+function aplicarCorSePermitido(hex){
+  if (!hex) return;
+  if (chkFixarCor && chkFixarCor.checked) return;
+
+  let v = String(hex).trim();
+  if (/^[0-9A-Fa-f]{6}$/.test(v)) v = '#' + v; // aceita sem #
+  if (/^#[0-9A-Fa-f]{6}$/.test(v)) {
+    corUnica.value = v;
+  }
+}
+
+function atualizarModoTextos() {
+  const ativo = chkTextos.checked;
+
+  wrapNomeG.style.display = ativo ? '' : 'none';
+
+  if (!ativo) {
+    // quando desativado, mantém G igual ao P
+    nomeG.value = nome.value;
+  }
+
+  renderAll();
+}
+
+chkTextos.addEventListener('change', atualizarModoTextos);
+
+// se o usuário digitar no nome P e o modo estiver desativado, replica pro nomeG
+nome.addEventListener('input', () => {
+  if (!chkTextos.checked) nomeG.value = nome.value;
+});
+
+function aplicarCorDoPersonagem(c) {
+  // se estiver fixado, não mexe
+  if (chkFixarCor && chkFixarCor.checked) return;
+
+  // se o personagem tiver cor sugerida, aplica
+  if (c && c.cor) {
+    corUnica.value = c.cor;
+  }
+}
+
 function renderAll(){
   const color = corUnica.value;
-  const nomeTxt = nome.value || 'Seu Nome';
+  const nomeTxtP = (nome.value || 'Seu Nome').trim();
+  const nomeTxtG = (chkTextos.checked ? (nomeG.value || nomeTxtP) : nomeTxtP).trim();
   const fontFamily = 'Calibri';
   const img = (personagemAtual && personagemAtual.arquivo) ? imgCache[personagemAtual.id] : null;
 
-  desenhar(canvasP, { color, text: nomeTxt, image: img, fontFamily, imgMaxW: SIZE.P.imgMaxW, imgMaxH: SIZE.P.imgMaxH, pt: SIZE.P.pt, maxLines: 2 });
-  desenhar(canvasG, { color, text: nomeTxt, image: img, fontFamily, imgMaxW: SIZE.G.imgMaxW, imgMaxH: SIZE.G.imgMaxH, pt: SIZE.G.pt, maxLines: 3 });
+  desenhar(canvasP, { color, text: nomeTxtP, image: img, fontFamily, imgMaxW: SIZE.P.imgMaxW, imgMaxH: SIZE.P.imgMaxH, pt: SIZE.P.pt, maxLines: 2 });
+  desenhar(canvasG, { color, text: nomeTxtG, image: img, fontFamily, imgMaxW: SIZE.G.imgMaxW, imgMaxH: SIZE.G.imgMaxH, pt: SIZE.G.pt, maxLines: 3 });
 }
 
 /* WhatsApp — template com preço, entrada e prazo */
-const TEMPLATE = (data) =>
+/* const TEMPLATE = (data) =>
   `🧾 *Pedido de etiquetas escolares — lhdigital* %0A%0A` +
   `Olá! Gostaria de fazer um pedido de etiquetas personalizadas:%0A%0A` +
   `• *Cartela:* ${encodeURIComponent(data.cartela)}%0A` +
@@ -431,10 +560,31 @@ const TEMPLATE = (data) =>
   `• *Tema/Personagem:* ${encodeURIComponent(data.personagem)}%0A` +
   `• *Cor (texto + borda):* ${encodeURIComponent(data.cor)}%0A%0A` +
   `(Prévia gerada no simulador lhdigital — via Site)`;
+*/
+
+// btnWhats.addEventListener('click', ()=>{
+//   const personagem = personagemAtual ? personagemAtual.nome : 'Nenhum';
+//   const text = TEMPLATE({ cartela: cartela.value, nome: nome.value || '—', personagem, cor: corUnica.value });
+//   window.open(`https://wa.me/${WHATSAPP_NUMBER}?type=phone_number&text=${text}`,'_blank');
+// });
 
 btnWhats.addEventListener('click', ()=>{
   const personagem = personagemAtual ? personagemAtual.nome : 'Nenhum';
-  const text = TEMPLATE({ cartela: cartela.value, nome: nome.value || '—', personagem, cor: corUnica.value });
+  const nomeP = (nome.value || '—').trim();
+  const nomeGtxt = (chkTextos.checked ? (nomeG.value || '—').trim() : nomeP);
+
+  const text =
+    `🧾 *Pedido de etiquetas escolares — lhdigital* %0A%0A` +
+    `Olá! Gostaria de fazer um pedido de etiquetas personalizadas:%0A%0A` +
+    `• *Cartela:* ${encodeURIComponent(cartela.value)}%0A` +
+    (chkTextos.checked
+      ? `• *Texto P:* ${encodeURIComponent(nomeP)}%0A• *Texto G:* ${encodeURIComponent(nomeGtxt)}%0A`
+      : `• *Nome na etiqueta:* ${encodeURIComponent(nomeP)}%0A`
+    ) +
+    `• *Tema/Personagem:* ${encodeURIComponent(personagem)}%0A` +
+    `• *Cor (texto + borda):* ${encodeURIComponent(corUnica.value)}%0A%0A` +
+    `(Prévia gerada no simulador lhdigital — via Site)`;
+
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?type=phone_number&text=${text}`,'_blank');
 });
 
@@ -459,12 +609,20 @@ btnReset.addEventListener('click', ()=>{
   nome.value = 'João Medeiros da Silva';
   corUnica.value = '#0000FF';
   cartela.value = 'A3 MIX';
+
+  chkTextos.checked = false;
+  chkFixarCor.checked = false;
+
+  nomeG.value = nome.value;
+  wrapNomeG.style.display = 'none';
+
   document.querySelector('.card-img[data-id="nenhum"]')?.click();
   renderAll();
 });
 
+
 /* eventos */
-[nome, corUnica, cartela].forEach(i=>{
+[nome, nomeG, corUnica, cartela].forEach(i=>{
   i.addEventListener('input', renderAll);
   i.addEventListener('change', renderAll);
 });
@@ -472,13 +630,16 @@ btnReset.addEventListener('click', ()=>{
 /* init */
 montarGaleria();
 
-// aplica o personagem vindo do catálogo (se houver), após a galeria existir
 if (personaId) {
   const btn = document.querySelector(`.card-img[data-id="${CSS.escape(personaId)}"]`);
   if (btn) btn.click();
 }
 
-renderAll();
+// por último, aplica cor do parâmetro (se veio) e respeita "Fixar cor"
+aplicarCorSePermitido(corParam);
+
+if (!personaId) renderAll();
+
 </script>
 </body>
 </html>
