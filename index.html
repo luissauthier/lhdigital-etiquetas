@@ -573,23 +573,21 @@ btnWhats.addEventListener('click', () => {
   const nomeP = (nome.value || '—').trim();
   const nomeGtxt = chkTextos.checked ? (nomeG.value || '—').trim() : nomeP;
 
-  let msg =
-    `🧾 *Pedido de etiquetas escolares — lhdigital (via Site)*\n\n` +
-    `Olá! Gostaria de fazer um pedido de etiquetas personalizadas:\n\n` +
-    `• *Cartela:* ${cartela.value}\n`;
+  const br = '%0A';
 
-  if (chkTextos.checked) {
-    msg += `• *Texto P:* ${nomeP}\n` +
-           `• *Texto G:* ${nomeGtxt}\n`;
-  } else {
-    msg += `• *Nome na etiqueta:* ${nomeP}\n`;
-  }
+  let text =
+    `🧾 *Pedido de etiquetas escolares — lhdigital (via Site)*${br}${br}` +
+    `Olá! Gostaria de fazer um pedido de etiquetas personalizadas:${br}${br}` +
+    `• *Cartela:* ${encodeURIComponent(cartela.value)}${br}` +
+    (chkTextos.checked
+      ? `• *Texto P:* ${encodeURIComponent(nomeP)}${br}` +
+        `• *Texto G:* ${encodeURIComponent(nomeGtxt)}${br}`
+      : `• *Nome na etiqueta:* ${encodeURIComponent(nomeP)}${br}`
+    ) +
+    `• *Tema/Personagem:* ${encodeURIComponent(personagem)}${br}` +
+    `• *Cor (texto + borda):* ${encodeURIComponent(corUnica.value)}${br}`;
 
-  msg +=
-    `• *Tema/Personagem:* ${personagem}\n` +
-    `• *Cor (texto + borda):* ${corUnica.value}\n`;
-
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
   window.open(url, '_blank');
 });
 
