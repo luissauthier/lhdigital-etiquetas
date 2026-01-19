@@ -553,7 +553,7 @@ function renderAll(){
 
 /* WhatsApp — template com preço, entrada e prazo */
 /* const TEMPLATE = (data) =>
-  `🧾 *Pedido de etiquetas escolares — lhdigital* %0A%0A` +
+  `📃 *Pedido de etiquetas escolares — lhdigital* %0A%0A` +
   `Olá! Gostaria de fazer um pedido de etiquetas personalizadas:%0A%0A` +
   `• *Cartela:* ${encodeURIComponent(data.cartela)}%0A` +
   `• *Nome na etiqueta:* ${encodeURIComponent(data.nome)}%0A` +
@@ -568,24 +568,29 @@ function renderAll(){
 //   window.open(`https://wa.me/${WHATSAPP_NUMBER}?type=phone_number&text=${text}`,'_blank');
 // });
 
-btnWhats.addEventListener('click', ()=>{
+btnWhats.addEventListener('click', () => {
   const personagem = personagemAtual ? personagemAtual.nome : 'Nenhum';
   const nomeP = (nome.value || '—').trim();
-  const nomeGtxt = (chkTextos.checked ? (nomeG.value || '—').trim() : nomeP);
+  const nomeGtxt = chkTextos.checked ? (nomeG.value || '—').trim() : nomeP;
 
-  const text =
-    `🧾 *Pedido de etiquetas escolares — lhdigital* %0A%0A` +
-    `Olá! Gostaria de fazer um pedido de etiquetas personalizadas:%0A%0A` +
-    `• *Cartela:* ${encodeURIComponent(cartela.value)}%0A` +
-    (chkTextos.checked
-      ? `• *Texto P:* ${encodeURIComponent(nomeP)}%0A• *Texto G:* ${encodeURIComponent(nomeGtxt)}%0A`
-      : `• *Nome na etiqueta:* ${encodeURIComponent(nomeP)}%0A`
-    ) +
-    `• *Tema/Personagem:* ${encodeURIComponent(personagem)}%0A` +
-    `• *Cor (texto + borda):* ${encodeURIComponent(corUnica.value)}%0A%0A` +
-    `(Prévia gerada no simulador lhdigital — via Site)`;
+  let msg =
+    `🧾 *Pedido de etiquetas escolares — lhdigital (via Site)*\n\n` +
+    `Olá! Gostaria de fazer um pedido de etiquetas personalizadas:\n\n` +
+    `• *Cartela:* ${cartela.value}\n`;
 
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?type=phone_number&text=${text}`,'_blank');
+  if (chkTextos.checked) {
+    msg += `• *Texto P:* ${nomeP}\n` +
+           `• *Texto G:* ${nomeGtxt}\n`;
+  } else {
+    msg += `• *Nome na etiqueta:* ${nomeP}\n`;
+  }
+
+  msg +=
+    `• *Tema/Personagem:* ${personagem}\n` +
+    `• *Cor (texto + borda):* ${corUnica.value}\n`;
+
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
 });
 
 btnDownload.addEventListener('click', ()=>{
@@ -614,66 +619,6 @@ btnReset.addEventListener('click', ()=>{
   chkFixarCor.checked = false;
 
   nomeG.value = nome.value;
-  wrapNomeG.style.display = 'none';
-
-  document.querySelector('.card-img[data-id="nenhum"]')?.click();
-  renderAll();
-});
-
-
-/* eventos */
-[nome, nomeG, corUnica, cartela].forEach(i=>{
-  i.addEventListener('input', renderAll);
-  i.addEventListener('change', renderAll);
-});
-
-/* init */
-montarGaleria();
-
-if (personaId) {
-  const btn = document.querySelector(`.card-img[data-id="${CSS.escape(personaId)}"]`);
-  if (btn) btn.click();
-}
-
-// por último, aplica cor do parâmetro (se veio) e respeita "Fixar cor"
-aplicarCorSePermitido(corParam);
-
-if (!personaId) renderAll();
-
-</script>
-</body>
-</html>
-alue = nome.value;
-  wrapNomeG.style.display = 'none';
-
-  document.querySelector('.card-img[data-id="nenhum"]')?.click();
-  renderAll();
-});
-
-
-/* eventos */
-[nome, nomeG, corUnica, cartela].forEach(i=>{
-  i.addEventListener('input', renderAll);
-  i.addEventListener('change', renderAll);
-});
-
-/* init */
-montarGaleria();
-
-if (personaId) {
-  const btn = document.querySelector(`.card-img[data-id="${CSS.escape(personaId)}"]`);
-  if (btn) btn.click();
-}
-
-// por último, aplica cor do parâmetro (se veio) e respeita "Fixar cor"
-aplicarCorSePermitido(corParam);
-
-if (!personaId) renderAll();
-
-</script>
-</body>
-</html>
-alue = nome.value;
   wrapNomeG.style.display = 'none';
 
   document.querySelector('.card-img[data-id="nenhum"]')?.click();
