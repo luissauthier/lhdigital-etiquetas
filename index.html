@@ -573,21 +573,21 @@ btnWhats.addEventListener('click', () => {
   const nomeP = (nome.value || '—').trim();
   const nomeGtxt = chkTextos.checked ? (nomeG.value || '—').trim() : nomeP;
 
-  const br = '%0A';
+  const br = '\r\n';
 
-  let text =
-    `🧾 *Pedido de etiquetas escolares — lhdigital (via Site)*${br}${br}` +
+  let msg =
+    `Pedido de etiquetas escolares — lhdigital (via Site)${br}${br}` +
     `Olá! Gostaria de fazer um pedido de etiquetas personalizadas:${br}${br}` +
-    `• *Cartela:* ${encodeURIComponent(cartela.value)}${br}` +
+    `• Cartela: ${cartela.value}${br}` +
     (chkTextos.checked
-      ? `• *Texto P:* ${encodeURIComponent(nomeP)}${br}` +
-        `• *Texto G:* ${encodeURIComponent(nomeGtxt)}${br}`
-      : `• *Nome na etiqueta:* ${encodeURIComponent(nomeP)}${br}`
+      ? `• Texto P: ${nomeP}${br}• Texto G: ${nomeGtxt}${br}`
+      : `• Nome na etiqueta: ${nomeP}${br}`
     ) +
-    `• *Tema/Personagem:* ${encodeURIComponent(personagem)}${br}` +
-    `• *Cor (texto + borda):* ${encodeURIComponent(corUnica.value)}${br}`;
+    `• Tema/Personagem: ${personagem}${br}` +
+    `• Cor (texto + borda): ${corUnica.value}${br}`;
 
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
+  // encode de TUDO (isso é o que mais evita “virar uma linha só”)
+  const url = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
 });
 
